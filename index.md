@@ -118,7 +118,7 @@ $$
 * Can we accomplish this if all $\delta_i \ne 0$
   - no, because methods rely on computational normalization
 * Are any $\delta_i = 0$? 
-  - maybe not, but many are very small
+  - maybe not, but many are very small for controlled experiment
 
 ---
 
@@ -130,3 +130,39 @@ $$
 * More complex parametric models: [baySeq](bioconductor.org/packages/baySeq)
 * Non-parametric: [SAM / SAMseq](http://statweb.stanford.edu/~tibs/SAM/)
 
+---
+
+### Back to the model
+
+$$
+\begin{align}
+X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
+\mu_{ij} &= \mu_{i0}, \quad j \in A \\
+\mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
+\end{align}
+$$
+
+<br>
+
+* N = 5000, M = 6
+* $\delta_i = 0$ for 90%
+* $\delta_i = \pm1$ for 10%
+* $\sigma_i \sim \Gamma(5,10)$ 
+
+---
+
+### Distribution of $\sigma_i$
+
+![plot of chunk sigmadist](assets/fig/sigmadist-1.png)
+
+---
+
+### Try simple row t-tests
+
+![plot of chunk boxt](assets/fig/boxt-1.png)
+
+---
+
+### Just looking at ranks
+
+![plot of chunk roc](assets/fig/roc-1.png)

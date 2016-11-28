@@ -128,7 +128,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 <li>Are any \(\delta_i = 0\)? 
 
 <ul>
-<li>maybe not, but many are very small</li>
+<li>maybe not, but many are very small for controlled experiment</li>
 </ul></li>
 </ul>
 
@@ -145,6 +145,41 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 <li>More complex parametric models: <a href="bioconductor.org/packages/baySeq">baySeq</a></li>
 <li>Non-parametric: <a href="http://statweb.stanford.edu/%7Etibs/SAM/">SAM / SAMseq</a></li>
 </ul>
+
+</section>
+<section class='' data-state='' id='slide-12'>
+  <h3>Back to the model</h3>
+  <p>\[
+\begin{align}
+X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
+\mu_{ij} &= \mu_{i0}, \quad j \in A \\
+\mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
+\end{align}
+\]</p>
+
+<p><br></p>
+
+<ul>
+<li>N = 5000, M = 6</li>
+<li>\(\delta_i = 0\) for 90%</li>
+<li>\(\delta_i = \pm1\) for 10%</li>
+<li>\(\sigma_i \sim \Gamma(5,10)\) </li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-13'>
+  <h3>Distribution of \(\sigma_i\)</h3>
+  <p><img src="assets/fig/sigmadist-1.png" alt="plot of chunk sigmadist"></p>
+
+</section>
+<section class='' data-state='' id='slide-14'>
+  <h3>Try simple row t-tests</h3>
+  <p><img src="assets/fig/boxt-1.png" alt="plot of chunk boxt"></p>
+
+</section>
+<section class='' data-state='' id='slide-15'>
+  <h3>Just looking at ranks</h3>
+  <p><img src="assets/fig/roc-1.png" alt="plot of chunk roc"></p>
 
 </section>
     </div>

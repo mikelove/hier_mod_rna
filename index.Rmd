@@ -118,7 +118,7 @@ $$
 * Can we accomplish this if all $\delta_i \ne 0$
   - no, because methods rely on computational normalization
 * Are any $\delta_i = 0$? 
-  - maybe not, but many are very small
+  - maybe not, but many are very small for controlled experiment
 
 ---
 
@@ -130,3 +130,72 @@ $$
 * More complex parametric models: [baySeq](bioconductor.org/packages/baySeq)
 * Non-parametric: [SAM / SAMseq](http://statweb.stanford.edu/~tibs/SAM/)
 
+---
+
+### Back to the model
+
+$$
+\begin{align}
+X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
+\mu_{ij} &= \mu_{i0}, \quad j \in A \\
+\mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
+\end{align}
+$$
+
+<br>
+
+* N = 5000, M = 6
+* $\delta_i = 0$ for 90%
+* $\delta_i = \pm1$ for 10%
+* $\sigma_i \sim \Gamma(5,10)$ 
+
+---
+
+### Distribution of $\sigma_i$
+
+```{r sigmadist, echo=FALSE}
+M <- 6
+N <- 5000
+mu0 <- rep(0, N)
+mu1 <- delta <- sample(c(0,1,-1), N, TRUE, prob=c(.9,.05,.05))
+sigma <- rgamma(N,5,10)
+library(rafalib)
+bigpar()
+hist(sigma, xlab=expression(sigma[i]),
+     col="grey", border="white", main="")
+```
+
+---
+
+### Try simple row t-tests
+
+```{r boxt, echo=FALSE}
+X <- matrix(rnorm(N*M,
+                  c(rep(mu0,M/2),rep(mu1,M/2)),
+                  sigma),ncol=M)
+library(genefilter)
+cond <- factor(rep(2:1, each=M/2))
+ts <- rowttests(X, cond)
+bigpar()
+boxplot(ts$statistic ~ delta,
+        xlab=expression(delta[i]),
+        ylab=expression(t[i]))
+```
+
+---
+
+### Just looking at ranks
+
+```{r roc, echo=FALSE}
+abs.t <- abs(ts$statistic)
+tseq <- seq(from=0,to=max(abs.t),length=400)
+curve <- function(rank) {
+  res <- t(sapply(tseq, function(t) {
+    fdr <- mean(delta[rank >= t] == 0)
+    sens <- mean(rank[delta != 0] > t)
+    c(FDR=fdr, sensitivity=sens)
+  }))
+}
+plot(curve(abs.t), type="o", pch=16, xlab=c(0,1), ylab=c(0,1))
+lines(curve(sample(abs.t,N)), type="o", pch=16, col="grey")
+```
