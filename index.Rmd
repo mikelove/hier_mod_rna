@@ -196,6 +196,7 @@ curve <- function(rank) {
     c(FDR=fdr, sensitivity=sens)
   }))
 }
-plot(curve(abs.t), type="o", pch=16, xlab=c(0,1), ylab=c(0,1))
+bigpar()
+plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
 lines(curve(sample(abs.t,N)), type="o", pch=16, col="grey")
 ```
