@@ -27,11 +27,48 @@
 
 </section>
 <section class='' data-state='' id='slide-2'>
-  <h2>Why measure RNA</h2>
-  
+  <h3>DNA =&gt; RNA</h3>
+  <p><img src="img/tx_elong.png"></p>
+
+<p><img src="img/tx_em.jpg"></p>
+
 </section>
 <section class='' data-state='' id='slide-3'>
-  <h2>Step back: pre-sequencing</h2>
+  <h3>Why measure RNA:</h3>
+  <h3>molecular phenotype</h3>
+
+<p><img width=500 src="img/people.jpg"></p>
+
+</section>
+<section class='' data-state='' id='slide-4'>
+  <h3>Why measure RNA:</h3>
+  <h3>tissue diversity</h3>
+
+<p><img src="img/roadmap.jpg"></p>
+
+<p><small><a href="http://www.roadmapepigenomics.org">Roadmap Epigenomics</a></small></p>
+
+</section>
+<section class='' data-state='' id='slide-5'>
+  <h3>Why measure RNA:</h3>
+  <h3>within tissue over time</h3>
+
+<p><img src="img/circ.png"></p>
+
+<p><small><a href="http://www.pnas.org/content/111/45/16219.full">Zhang, et al. Circadian gene expression atlas (2014)</a></small></p>
+
+</section>
+<section class='' data-state='' id='slide-6'>
+  <h3>Why measure RNA:</h3>
+  <h3>discover disease sub-types</h3>
+
+<p><img width=400 src="img/perou.png"></p>
+
+<p><small><a href="http://www.nature.com/nature/journal/v406/n6797/full/406747a0.html">Perou, et al. Molecular portraits of human breast tumours (2000)</a></small></p>
+
+</section>
+<section class='' data-state='' id='slide-7'>
+  <h3>Step back: pre-sequencing</h3>
   <ul>
 <li>Before sequencing was microarray</li>
 <li>Signal was captured light (positive, &quot;continuous&quot;)</li>
@@ -40,8 +77,8 @@
 <p><img width=350 src="img/ma2.png"> <img width=300 src="img/ma.jpg"></p>
 
 </section>
-<section class='' data-state='' id='slide-4'>
-  <h2>Motivating problem</h2>
+<section class='' data-state='' id='slide-8'>
+  <h3>Motivating problem</h3>
   <ul>
 <li>Measure gene expression for N genes, and M samples</li>
 <li>log of gene expression values are in a tall matrix X</li>
@@ -65,8 +102,8 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 <p>\(\delta_i \ne 0\) implies DE (differential expression)</p>
 
 </section>
-<section class='' data-state='' id='slide-5'>
-  <h2>Goal of differential expression testing</h2>
+<section class='' data-state='' id='slide-9'>
+  <h3>Goal of differential expression testing</h3>
   <ul>
 <li>Find a set of genes for which \(\delta_i \ne 0\)</li>
 <li>And which obeys false discovery rate bounds</li>
@@ -80,8 +117,8 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 \]</p>
 
 </section>
-<section class='' data-state='' id='slide-6'>
-  <h2>Is this realistic?</h2>
+<section class='' data-state='' id='slide-10'>
+  <h3>Is this realistic?</h3>
   <ul>
 <li>Can we accomplish this if all \(\delta_i \ne 0\)
 
@@ -93,6 +130,20 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 <ul>
 <li>maybe not, but many are very small</li>
 </ul></li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-11'>
+  <h3>Is this realistic?</h3>
+  <ul>
+<li>What about \(\sigma_i\) for both groups?
+
+<ul>
+<li>often this is enough, larger variance dominates</li>
+<li>not for single cell experiments</li>
+</ul></li>
+<li>More complex parametric models: <a href="bioconductor.org/packages/baySeq">baySeq</a></li>
+<li>Non-parametric: <a href="http://statweb.stanford.edu/%7Etibs/SAM/">SAM / SAMseq</a></li>
 </ul>
 
 </section>
