@@ -128,12 +128,13 @@ $$
 
 * Find a set of genes for which $\delta_i \ne 0$
 * And which obeys false discovery rate bounds
-* For G genes in our set at FDR threshold z
+* For genes in our set G at FDR threshold z
 
 <br>
 
 $$
-E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
+E \left( \sum\nolimits_{i \in G} 1_{ \{\delta_i = 0\} } \right) \le
+\left\vert G \right\vert z
 $$
 
 ---
@@ -141,7 +142,7 @@ $$
 ### Is this realistic?
 
 * Can we accomplish this if all $\delta_i \ne 0$
-  - no, because methods rely on computational normalization
+  - no, because methods often rely on global scaling normalization
 * Are any $\delta_i = 0$? 
   - maybe not, but many are very small for controlled experiment
 
@@ -171,8 +172,8 @@ $$
 
 * N = 5000, M = 6
 * $\delta_i = 0$ for 90%
-* $\delta_i = \pm1$ for 10%
-* $\sigma_i \sim \Gamma(5,10)$ 
+* $\delta_i = \pm2$ for 10%
+* $\sigma_i \sim \Gamma(10,10)$ 
 
 ---
 
@@ -189,6 +190,8 @@ $$
 ---
 
 ### Just looking at ranks
+
+* Black = t-statistics, grey = random order, X = nominal FDR 20%
 
 ![plot of chunk roc](assets/fig/roc-1.png)
 
@@ -319,5 +322,71 @@ location of *shrinkage* or *moderation*
 
 ### Rank is not the full picture
 
-* The limma estimator is also controlling degrees of freedom gained
-  via the moderation
+* limma also estimating degrees of freedom gained
+* X = nominal FDR 20%
+
+![plot of chunk roc4](assets/fig/roc4-1.png)
+
+
+---
+
+### RNA-seq: counting molecules
+
+<img src="img/illumina.png">
+
+---
+
+### RNA-seq: counting molecules
+
+```
+@SRR1265495.1 1/1
+CTTTGCCCGCGTGTCAGACTCCATCCCTCCTCTGCCGCCACCGCAGCAGCCACAGGCAGAGGAGGACGAGGACGACTGGGAATCGTAGGGGGCTCCATGAC
++
+CCCFFFFFHGFHHHIJJIJIJJIJJJJJJJGIIJJJIJJJJJJJJEFHDEFFFEECDDDBDD?BB?B@BDDD@;9<BBBDBCB@A2<?BDDDBDBD@CDDC
+@SRR1265495.2 2/1
+CCTGGCTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGTCCTCGTCCTCCTCTGC
++
+@C@FFFDFHHHHGGIIAGHI9GIIIIIGIIIIIGI@@FHGDDDH@GGIBB05?B>ACCCCCCCB<?BBCCBBBBCBCDC3>AC<BB<?CBBB?<@CCCA:@
+@SRR1265495.3 3/1
+CTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGTCCTCGTCCTCCTCTGCCTGTG
++
+@C@DFFFFGGHDHIIEGDHCGGHIJGEHIIJIIJIEEHGIGEGDDB@@@CDDDDEDDDDDBDDDDDDDDDBCCDDCCDBBDDDDDB@?@DDDDCDDCC@4>
+```
+
+for ~30 million reads (often pairs of reads)
+
+---
+
+### RNA-seq: align to genome or transcriptome
+
+<img width=300 src="img/google.png">
+
+<img src="img/blat.png">
+
+---
+
+### RNA-seq: counting molecules
+
+* Now for each gene and each sample we can obtain a *count*
+  or *estimated count* of fragments
+* Why estimated? Because some fragments cannot be uniquely associated
+  with genes or isoforms
+* Clever and fast algorithms for probabalistically assigning these
+* Assume we have integer counts $K_{ij}$ of unique fragments or from 
+  rounding estimated counts
+
+---
+
+### Counts
+
+* Either model counts via count distributions and inference with GLM
+* Learn weights associated with log counts
+
+---
+
+### Negative Binomial / Gamma Poisson
+
+---
+
+### Moderation of dispersion
+

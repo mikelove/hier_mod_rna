@@ -131,13 +131,14 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
   <ul>
 <li>Find a set of genes for which \(\delta_i \ne 0\)</li>
 <li>And which obeys false discovery rate bounds</li>
-<li>For G genes in our set at FDR threshold z</li>
+<li>For genes in our set G at FDR threshold z</li>
 </ul>
 
 <p><br></p>
 
 <p>\[
-E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
+E \left( \sum\nolimits_{i \in G} 1_{ \{\delta_i = 0\} } \right) \le
+\left\vert G \right\vert z
 \]</p>
 
 </section>
@@ -147,7 +148,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 <li>Can we accomplish this if all \(\delta_i \ne 0\)
 
 <ul>
-<li>no, because methods rely on computational normalization</li>
+<li>no, because methods often rely on global scaling normalization</li>
 </ul></li>
 <li>Are any \(\delta_i = 0\)? 
 
@@ -186,8 +187,8 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 <ul>
 <li>N = 5000, M = 6</li>
 <li>\(\delta_i = 0\) for 90%</li>
-<li>\(\delta_i = \pm1\) for 10%</li>
-<li>\(\sigma_i \sim \Gamma(5,10)\) </li>
+<li>\(\delta_i = \pm2\) for 10%</li>
+<li>\(\sigma_i \sim \Gamma(10,10)\) </li>
 </ul>
 
 </section>
@@ -203,7 +204,11 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 </section>
 <section class='' data-state='' id='slide-17'>
   <h3>Just looking at ranks</h3>
-  <p><img src="assets/fig/roc-1.png" alt="plot of chunk roc"></p>
+  <ul>
+<li>Black = t-statistics, grey = random order, X = nominal FDR 20%</li>
+</ul>
+
+<p><img src="assets/fig/roc-1.png" alt="plot of chunk roc"></p>
 
 </section>
 <section class='' data-state='' id='slide-18'>
@@ -325,10 +330,72 @@ variance of coefficients)</li>
 <section class='' data-state='' id='slide-30'>
   <h3>Rank is not the full picture</h3>
   <ul>
-<li>The limma estimator is also controlling degrees of freedom gained
-via the moderation</li>
+<li>limma also estimating degrees of freedom gained</li>
+<li>X = nominal FDR 20%</li>
 </ul>
 
+<p><img src="assets/fig/roc4-1.png" alt="plot of chunk roc4"></p>
+
+</section>
+<section class='' data-state='' id='slide-31'>
+  <h3>RNA-seq: counting molecules</h3>
+  <p><img src="img/illumina.png"></p>
+
+</section>
+<section class='' data-state='' id='slide-32'>
+  <h3>RNA-seq: counting molecules</h3>
+  <pre><code>@SRR1265495.1 1/1
+CTTTGCCCGCGTGTCAGACTCCATCCCTCCTCTGCCGCCACCGCAGCAGCCACAGGCAGAGGAGGACGAGGACGACTGGGAATCGTAGGGGGCTCCATGAC
++
+CCCFFFFFHGFHHHIJJIJIJJIJJJJJJJGIIJJJIJJJJJJJJEFHDEFFFEECDDDBDD?BB?B@BDDD@;9&lt;BBBDBCB@A2&lt;?BDDDBDBD@CDDC
+@SRR1265495.2 2/1
+CCTGGCTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGTCCTCGTCCTCCTCTGC
++
+@C@FFFDFHHHHGGIIAGHI9GIIIIIGIIIIIGI@@FHGDDDH@GGIBB05?B&gt;ACCCCCCCB&lt;?BBCCBBBBCBCDC3&gt;AC&lt;BB&lt;?CBBB?&lt;@CCCA:@
+@SRR1265495.3 3/1
+CTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGTCCTCGTCCTCCTCTGCCTGTG
++
+@C@DFFFFGGHDHIIEGDHCGGHIJGEHIIJIIJIEEHGIGEGDDB@@@CDDDDEDDDDDBDDDDDDDDDBCCDDCCDBBDDDDDB@?@DDDDCDDCC@4&gt;
+</code></pre>
+
+<p>for ~30 million reads (often pairs of reads)</p>
+
+</section>
+<section class='' data-state='' id='slide-33'>
+  <h3>RNA-seq: align to genome or transcriptome</h3>
+  <p><img width=300 src="img/google.png"></p>
+
+<p><img src="img/blat.png"></p>
+
+</section>
+<section class='' data-state='' id='slide-34'>
+  <h3>RNA-seq: counting molecules</h3>
+  <ul>
+<li>Now for each gene and each sample we can obtain a <em>count</em>
+or <em>estimated count</em> of fragments</li>
+<li>Why estimated? Because some fragments cannot be uniquely associated
+with genes or isoforms</li>
+<li>Clever and fast algorithms for probabalistically assigning these</li>
+<li>Assume we have integer counts \(K_{ij}\) of unique fragments or from 
+rounding estimated counts</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-35'>
+  <h3>Counts</h3>
+  <ul>
+<li>Either model counts via count distributions and inference with GLM</li>
+<li>Learn weights associated with log counts</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-36'>
+  <h3>Negative Binomial / Gamma Poisson</h3>
+  
+</section>
+<section class='' data-state='' id='slide-37'>
+  <h3>Moderation of dispersion</h3>
+  
 </section>
     </div>
   </div>

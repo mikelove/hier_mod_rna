@@ -128,12 +128,13 @@ $$
 
 * Find a set of genes for which $\delta_i \ne 0$
 * And which obeys false discovery rate bounds
-* For G genes in our set at FDR threshold z
+* For genes in our set G at FDR threshold z
 
 <br>
 
 $$
-E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
+E \left( \sum\nolimits_{i \in G} 1_{ \{\delta_i = 0\} } \right) \le
+\left\vert G \right\vert z
 $$
 
 ---
@@ -141,7 +142,7 @@ $$
 ### Is this realistic?
 
 * Can we accomplish this if all $\delta_i \ne 0$
-  - no, because methods rely on computational normalization
+  - no, because methods often rely on global scaling normalization
 * Are any $\delta_i = 0$? 
   - maybe not, but many are very small for controlled experiment
 
@@ -171,19 +172,20 @@ $$
 
 * N = 5000, M = 6
 * $\delta_i = 0$ for 90%
-* $\delta_i = \pm1$ for 10%
-* $\sigma_i \sim \Gamma(5,10)$ 
+* $\delta_i = \pm2$ for 10%
+* $\sigma_i \sim \Gamma(10,10)$ 
 
 ---
 
 ### Distribution of $\sigma_i$
 
 ```{r sigmadist, echo=FALSE}
+set.seed(1)
 M <- 6
 N <- 5000
 mu0 <- rep(0, N)
-mu1 <- delta <- sample(c(0,1,-1), N, TRUE, prob=c(.9,.05,.05))
-sigma <- rgamma(N,5,10)
+mu1 <- delta <- sample(c(0,2,-2), N, TRUE, prob=c(.9,.05,.05))
+sigma <- rgamma(N,10,10)
 library(rafalib)
 bigpar()
 hist(sigma, xlab=expression(sigma[i]),
@@ -211,6 +213,8 @@ boxplot(ts$statistic ~ delta,
 
 ### Just looking at ranks
 
+* Black = t-statistics, grey = random order, X = nominal FDR 20%
+
 ```{r roc, echo=FALSE}
 abs.t <- abs(ts$statistic)
 tseq <- seq(from=0,to=max(abs.t),length=400)
@@ -224,6 +228,17 @@ curve <- function(rank) {
 bigpar()
 plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
 lines(curve(sample(abs.t,N)), type="o", pch=16, col="grey")
+# draw an FDR of 0.2
+calcFDRSens <- function(padj, abs.t, fdr) {
+  padj.cut <- sort(padj)[which(sort(padj) > fdr)[1] - 1]
+  t.cut <- min(abs.t[padj == padj.cut])
+  fdr <- mean(delta[abs.t >= t.cut] == 0)
+  sens <- mean(abs.t[delta != 0] > t.cut)
+  c(fdr=fdr,sens=sens)
+}
+padj <- p.adjust(ts$p.value, method="BH")
+res <- calcFDRSens(padj, abs.t, 0.2)
+points(res[1], res[2], pch=4, cex=3, lwd=3, col="magenta")
 ```
 
 ---
@@ -414,6 +429,84 @@ legend("bottomright",c(paste0("B=",0:2/4),"limma"),
 
 ### Rank is not the full picture
 
-* The limma estimator is also estimating the degrees of freedom gained
-  via the moderation
+* limma also estimating degrees of freedom gained
+* X = nominal FDR 20%
+
+```{r roc4, echo=FALSE}
+bigpar()
+plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
+lines(curve(abs(limma.t)), type="o", pch=16, col="dodgerblue")
+# draw FDR of 0.2
+padj <- p.adjust(ts$p.value, method="BH")
+res <- calcFDRSens(padj, abs.t, 0.2)
+points(res[1], res[2], pch=4, cex=3, lwd=3, col="magenta")
+padj <- p.adjust(eb$p.value[,2], method="BH")
+res <- calcFDRSens(padj, abs(limma.t), 0.2)
+points(res[1], res[2], pch=4, cex=3, lwd=3, col="blue")
+legend("bottomright",c("t","limma"),
+       col=c("black","dodgerblue"),pch=16,lty=1)
+```
+
+
+---
+
+### RNA-seq: counting molecules
+
+<img src="img/illumina.png">
+
+---
+
+### RNA-seq: counting molecules
+
+```
+@SRR1265495.1 1/1
+CTTTGCCCGCGTGTCAGACTCCATCCCTCCTCTGCCGCCACCGCAGCAGCCACAGGCAGAGGAGGACGAGGACGACTGGGAATCGTAGGGGGCTCCATGAC
++
+CCCFFFFFHGFHHHIJJIJIJJIJJJJJJJGIIJJJIJJJJJJJJEFHDEFFFEECDDDBDD?BB?B@BDDD@;9<BBBDBCB@A2<?BDDDBDBD@CDDC
+@SRR1265495.2 2/1
+CCTGGCTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGTCCTCGTCCTCCTCTGC
++
+@C@FFFDFHHHHGGIIAGHI9GIIIIIGIIIIIGI@@FHGDDDH@GGIBB05?B>ACCCCCCCB<?BBCCBBBBCBCDC3>AC<BB<?CBBB?<@CCCA:@
+@SRR1265495.3 3/1
+CTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGTCCTCGTCCTCCTCTGCCTGTG
++
+@C@DFFFFGGHDHIIEGDHCGGHIJGEHIIJIIJIEEHGIGEGDDB@@@CDDDDEDDDDDBDDDDDDDDDBCCDDCCDBBDDDDDB@?@DDDDCDDCC@4>
+```
+
+for ~30 million reads (often pairs of reads)
+
+---
+
+### RNA-seq: align to genome or transcriptome
+
+<img width=300 src="img/google.png">
+
+<img src="img/blat.png">
+
+---
+
+### RNA-seq: counting molecules
+
+* Now for each gene and each sample we can obtain a *count*
+  or *estimated count* of fragments
+* Why estimated? Because some fragments cannot be uniquely associated
+  with genes or isoforms
+* Clever and fast algorithms for probabalistically assigning these
+* Assume we have integer counts $K_{ij}$ of unique fragments or from 
+  rounding estimated counts
+
+---
+
+### Counts
+
+* Either model counts via count distributions and inference with GLM
+* Learn weights associated with log counts
+
+---
+
+### Negative Binomial / Gamma Poisson
+
+---
+
+### Moderation of dispersion
 
