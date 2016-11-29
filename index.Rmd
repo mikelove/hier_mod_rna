@@ -86,7 +86,7 @@ Dept of Genetics
 
 ### Motivating problem
 
-* Measure gene expression for N genes, and M samples
+* Gene expression for *i*=1,...,N genes and *j*=1,...,M samples
 * log of gene expression values are in a tall matrix X
 * log here is convenient because gene expression is non-negative and has a
   long tail
@@ -105,6 +105,22 @@ $$
 <br>
 
 $\delta_i \ne 0$ implies DE (differential expression)
+
+---
+
+### Note $\sigma_i$
+
+This is *critical*: different genes *i* have different amount of variability.
+
+<br>
+
+$$ 
+\begin{align}
+X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
+\mu_{ij} &= \mu_{i0}, \quad j \in A \\
+\mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
+\end{align}
+$$
 
 ---
 
@@ -214,22 +230,22 @@ lines(curve(sample(abs.t,N)), type="o", pch=16, col="grey")
 
 ### Characterize the false positives
 
-Set a $\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+Call $\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
 
-```{r tildet, echo=FALSE}
-t.tilde <- median(abs.t[delta != 0])
+```{r mediant, echo=FALSE}
+med.t <- median(abs.t[delta != 0])
 bigpar()
 boxplot(abs(ts$statistic) ~ abs(delta),
         xlab=expression(abs(delta[i])),
         ylab=expression(abs(t[i])))
-abline(h=t.tilde,col="red")
+abline(h=med.t,col="red")
 ```
 
 ---
 
 ### Estimates of $\sigma_i$
 
-$\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+$\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
 
 ```{r fp, echo=FALSE, fig.width=12}
 sigma.hat <- ts$dm / (ts$statistic * sqrt(4/M))
@@ -243,7 +259,53 @@ legend("topright",c("null","DE"),pch=1,
 plot(sigma[delta == 0], sigma.hat[delta == 0],
      main="null genes",
      xlab=expression(sigma[i]), ylab=expression(hat(sigma[i])),
-     col=ifelse(abs.t[delta == 0] > t.tilde, "red", transgrey))
-legend("topright",c(expression(abs(t[i])<tilde(t)),expression(abs(t[i])>tilde(t))),pch=1,
+     col=ifelse(abs.t[delta == 0] > med.t, "red", transgrey))
+legend("topright",c(expression(abs(t[i])<med(t)),expression(abs(t[i])>med(t))),pch=1,
        col=c("grey","red"),cex=2,bg="white")
 ```
+
+---
+
+### New estimator for $\sigma_i$
+
+$\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i$
+
+$\tilde{\sigma}_i^B \equiv (1-B) \hat{\sigma}_i + B \bar{\sigma}$
+
+```{r tildesigma, echo=FALSE, fig.width=4, fig.height=4}
+bigpar(mar=c(5,6,1,1))
+plot(sigma.hat, sigma.hat, asp=1,
+     xlab=expression(hat(sigma[i])),
+     ylab=expression(tilde(sigma)[i]^B))
+cols <- c("purple","red","orange","green3")
+for (i in 1:4) {
+  B <- i/4 
+  sigma.tilde <- (1 - B) * sigma.hat + B * mean(sigma.hat)
+  points(sigma.hat, sigma.tilde, asp=1, col=cols[i])
+}
+```
+
+---
+
+### How does new estimator perform
+
+```{r roc2, echo=FALSE}
+bigpar()
+plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
+for (i in 1:4) {
+  B <- i/4 
+  sigma.tilde <- (1 - B) * sigma.hat + B * mean(sigma.hat)
+  new.t <- ts$dm / (sigma.tilde * sqrt(4/M))
+  lines(curve(abs(new.t)), type="o", pch=16, col=cols[i])
+}
+legend("bottomright",paste0("B=",0:4/4),col=c("black",cols),pch=16,lty=1)
+```
+
+---
+
+### Summary
+
+* Top false positives were coming from genes with too low $\hat{\sigma}_i$
+* Replace $\hat{\sigma}_i$ with an estimate which is closer to
+  $\bar{\sigma}$
+* Depending on "close", new estimator dominates at all thresholds

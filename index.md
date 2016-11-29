@@ -86,7 +86,7 @@ Dept of Genetics
 
 ### Motivating problem
 
-* Measure gene expression for N genes, and M samples
+* Gene expression for *i*=1,...,N genes and *j*=1,...,M samples
 * log of gene expression values are in a tall matrix X
 * log here is convenient because gene expression is non-negative and has a
   long tail
@@ -105,6 +105,22 @@ $$
 <br>
 
 $\delta_i \ne 0$ implies DE (differential expression)
+
+---
+
+### Note $\sigma_i$
+
+This is *critical*: different genes *i* have different amount of variability.
+
+<br>
+
+$$ 
+\begin{align}
+X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
+\mu_{ij} &= \mu_{i0}, \quad j \in A \\
+\mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
+\end{align}
+$$
 
 ---
 
@@ -180,14 +196,39 @@ $$
 
 ### Characterize the false positives
 
-Set a $\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+Call $\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
 
-![plot of chunk tildet](assets/fig/tildet-1.png)
+![plot of chunk mediant](assets/fig/mediant-1.png)
 
 ---
 
 ### Estimates of $\sigma_i$
 
-$\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+$\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
 
 ![plot of chunk fp](assets/fig/fp-1.png)
+
+---
+
+### New estimator for $\sigma_i$
+
+$\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i$
+
+$\tilde{\sigma}_i^B \equiv (1-B) \hat{\sigma}_i + B \bar{\sigma}$
+
+![plot of chunk tildesigma](assets/fig/tildesigma-1.png)
+
+---
+
+### How does new estimator perform
+
+![plot of chunk roc2](assets/fig/roc2-1.png)
+
+---
+
+### Summary
+
+* Top false positives were coming from genes with too low $\hat{\sigma}_i$
+* Replace $\hat{\sigma}_i$ with an estimate which is closer to
+  $\bar{\sigma}$
+* Depending on "close", new estimator dominates at all thresholds

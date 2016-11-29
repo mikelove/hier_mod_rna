@@ -89,7 +89,7 @@
 <section class='' data-state='' id='slide-9'>
   <h3>Motivating problem</h3>
   <ul>
-<li>Measure gene expression for N genes, and M samples</li>
+<li>Gene expression for <em>i</em>=1,...,N genes and <em>j</em>=1,...,M samples</li>
 <li>log of gene expression values are in a tall matrix X</li>
 <li>log here is convenient because gene expression is non-negative and has a
 long tail</li>
@@ -112,6 +112,21 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 
 </section>
 <section class='' data-state='' id='slide-10'>
+  <h3>Note \(\sigma_i\)</h3>
+  <p>This is <em>critical</em>: different genes <em>i</em> have different amount of variability.</p>
+
+<p><br></p>
+
+<p>\[ 
+\begin{align}
+X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
+\mu_{ij} &= \mu_{i0}, \quad j \in A \\
+\mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
+\end{align}
+\]</p>
+
+</section>
+<section class='' data-state='' id='slide-11'>
   <h3>Goal of differential expression testing</h3>
   <ul>
 <li>Find a set of genes for which \(\delta_i \ne 0\)</li>
@@ -126,7 +141,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 \]</p>
 
 </section>
-<section class='' data-state='' id='slide-11'>
+<section class='' data-state='' id='slide-12'>
   <h3>Is this realistic?</h3>
   <ul>
 <li>Can we accomplish this if all \(\delta_i \ne 0\)
@@ -142,7 +157,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-12'>
+<section class='' data-state='' id='slide-13'>
   <h3>Is this realistic?</h3>
   <ul>
 <li>What about \(\sigma_i\) for both groups?
@@ -156,7 +171,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-13'>
+<section class='' data-state='' id='slide-14'>
   <h3>Back to the model</h3>
   <p>\[
 \begin{align}
@@ -176,33 +191,57 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-14'>
+<section class='' data-state='' id='slide-15'>
   <h3>Distribution of \(\sigma_i\)</h3>
   <p><img src="assets/fig/sigmadist-1.png" alt="plot of chunk sigmadist"></p>
 
 </section>
-<section class='' data-state='' id='slide-15'>
+<section class='' data-state='' id='slide-16'>
   <h3>Try simple row t-tests</h3>
   <p><img src="assets/fig/boxt-1.png" alt="plot of chunk boxt"></p>
 
 </section>
-<section class='' data-state='' id='slide-16'>
+<section class='' data-state='' id='slide-17'>
   <h3>Just looking at ranks</h3>
   <p><img src="assets/fig/roc-1.png" alt="plot of chunk roc"></p>
 
 </section>
-<section class='' data-state='' id='slide-17'>
+<section class='' data-state='' id='slide-18'>
   <h3>Characterize the false positives</h3>
-  <p>Set a \(\tilde{t} = \textrm{median}( \left| t_i \right| )\) for \(i\) s.t. \(\delta_i \ne 0\)</p>
+  <p>Call \(\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )\) for \(i\) s.t. \(\delta_i \ne 0\)</p>
 
-<p><img src="assets/fig/tildet-1.png" alt="plot of chunk tildet"></p>
+<p><img src="assets/fig/mediant-1.png" alt="plot of chunk mediant"></p>
 
 </section>
-<section class='' data-state='' id='slide-18'>
+<section class='' data-state='' id='slide-19'>
   <h3>Estimates of \(\sigma_i\)</h3>
-  <p>\(\tilde{t} = \textrm{median}( \left| t_i \right| )\) for \(i\) s.t. \(\delta_i \ne 0\)</p>
+  <p>\(\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )\) for \(i\) s.t. \(\delta_i \ne 0\)</p>
 
 <p><img src="assets/fig/fp-1.png" alt="plot of chunk fp"></p>
+
+</section>
+<section class='' data-state='' id='slide-20'>
+  <h3>New estimator for \(\sigma_i\)</h3>
+  <p>\(\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i\)</p>
+
+<p>\(\tilde{\sigma}_i^B \equiv (1-B) \hat{\sigma}_i + B \bar{\sigma}\)</p>
+
+<p><img src="assets/fig/tildesigma-1.png" alt="plot of chunk tildesigma"></p>
+
+</section>
+<section class='' data-state='' id='slide-21'>
+  <h3>How does new estimator perform</h3>
+  <p><img src="assets/fig/roc2-1.png" alt="plot of chunk roc2"></p>
+
+</section>
+<section class='' data-state='' id='slide-22'>
+  <h3>Summary</h3>
+  <ul>
+<li>Top false positives were coming from genes with too low \(\hat{\sigma}_i\)</li>
+<li>Replace \(\hat{\sigma}_i\) with an estimate which is closer to
+\(\bar{\sigma}\)</li>
+<li>Depending on &quot;close&quot;, new estimator dominates at all thresholds</li>
+</ul>
 
 </section>
     </div>
