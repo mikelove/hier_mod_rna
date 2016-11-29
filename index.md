@@ -47,6 +47,15 @@ Dept of Genetics
 
 ---
 
+### Why measure RNA: 
+### tissue diversity
+
+<img width=500 src="img/gtex.png">
+
+<small>[GTEx](http://www.gtexportal.org/home/)</small>
+
+---
+
 ### Why measure RNA:
 ### within tissue over time
 
@@ -166,3 +175,19 @@ $$
 ### Just looking at ranks
 
 ![plot of chunk roc](assets/fig/roc-1.png)
+
+---
+
+### Characterize the false positives
+
+Set a $\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+
+![plot of chunk tildet](assets/fig/tildet-1.png)
+
+---
+
+### Estimates of $\sigma_i$
+
+$\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+
+![plot of chunk fp](assets/fig/fp-1.png)

@@ -51,6 +51,15 @@
 </section>
 <section class='' data-state='' id='slide-5'>
   <h3>Why measure RNA:</h3>
+  <h3>tissue diversity</h3>
+
+<p><img width=500 src="img/gtex.png"></p>
+
+<p><small><a href="http://www.gtexportal.org/home/">GTEx</a></small></p>
+
+</section>
+<section class='' data-state='' id='slide-6'>
+  <h3>Why measure RNA:</h3>
   <h3>within tissue over time</h3>
 
 <p><img src="img/circ.png"></p>
@@ -58,7 +67,7 @@
 <p><small><a href="http://www.pnas.org/content/111/45/16219.full">Zhang, et al. Circadian gene expression atlas (2014)</a></small></p>
 
 </section>
-<section class='' data-state='' id='slide-6'>
+<section class='' data-state='' id='slide-7'>
   <h3>Why measure RNA:</h3>
   <h3>discover disease sub-types</h3>
 
@@ -67,7 +76,7 @@
 <p><small><a href="http://www.nature.com/nature/journal/v406/n6797/full/406747a0.html">Perou, et al. Molecular portraits of human breast tumours (2000)</a></small></p>
 
 </section>
-<section class='' data-state='' id='slide-7'>
+<section class='' data-state='' id='slide-8'>
   <h3>Step back: pre-sequencing</h3>
   <ul>
 <li>Before sequencing was microarray</li>
@@ -77,7 +86,7 @@
 <p><img width=350 src="img/ma2.png"> <img width=300 src="img/ma.jpg"></p>
 
 </section>
-<section class='' data-state='' id='slide-8'>
+<section class='' data-state='' id='slide-9'>
   <h3>Motivating problem</h3>
   <ul>
 <li>Measure gene expression for N genes, and M samples</li>
@@ -102,7 +111,7 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 <p>\(\delta_i \ne 0\) implies DE (differential expression)</p>
 
 </section>
-<section class='' data-state='' id='slide-9'>
+<section class='' data-state='' id='slide-10'>
   <h3>Goal of differential expression testing</h3>
   <ul>
 <li>Find a set of genes for which \(\delta_i \ne 0\)</li>
@@ -117,7 +126,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 \]</p>
 
 </section>
-<section class='' data-state='' id='slide-10'>
+<section class='' data-state='' id='slide-11'>
   <h3>Is this realistic?</h3>
   <ul>
 <li>Can we accomplish this if all \(\delta_i \ne 0\)
@@ -133,7 +142,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-11'>
+<section class='' data-state='' id='slide-12'>
   <h3>Is this realistic?</h3>
   <ul>
 <li>What about \(\sigma_i\) for both groups?
@@ -147,7 +156,7 @@ E(\sum_i 1_{ \{\delta_i = 0\} }) \le G z
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-12'>
+<section class='' data-state='' id='slide-13'>
   <h3>Back to the model</h3>
   <p>\[
 \begin{align}
@@ -167,19 +176,33 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-13'>
+<section class='' data-state='' id='slide-14'>
   <h3>Distribution of \(\sigma_i\)</h3>
   <p><img src="assets/fig/sigmadist-1.png" alt="plot of chunk sigmadist"></p>
 
 </section>
-<section class='' data-state='' id='slide-14'>
+<section class='' data-state='' id='slide-15'>
   <h3>Try simple row t-tests</h3>
   <p><img src="assets/fig/boxt-1.png" alt="plot of chunk boxt"></p>
 
 </section>
-<section class='' data-state='' id='slide-15'>
+<section class='' data-state='' id='slide-16'>
   <h3>Just looking at ranks</h3>
   <p><img src="assets/fig/roc-1.png" alt="plot of chunk roc"></p>
+
+</section>
+<section class='' data-state='' id='slide-17'>
+  <h3>Characterize the false positives</h3>
+  <p>Set a \(\tilde{t} = \textrm{median}( \left| t_i \right| )\) for \(i\) s.t. \(\delta_i \ne 0\)</p>
+
+<p><img src="assets/fig/tildet-1.png" alt="plot of chunk tildet"></p>
+
+</section>
+<section class='' data-state='' id='slide-18'>
+  <h3>Estimates of \(\sigma_i\)</h3>
+  <p>\(\tilde{t} = \textrm{median}( \left| t_i \right| )\) for \(i\) s.t. \(\delta_i \ne 0\)</p>
+
+<p><img src="assets/fig/fp-1.png" alt="plot of chunk fp"></p>
 
 </section>
     </div>

@@ -47,6 +47,15 @@ Dept of Genetics
 
 ---
 
+### Why measure RNA: 
+### tissue diversity
+
+<img width=500 src="img/gtex.png">
+
+<small>[GTEx](http://www.gtexportal.org/home/)</small>
+
+---
+
 ### Why measure RNA:
 ### within tissue over time
 
@@ -199,4 +208,42 @@ curve <- function(rank) {
 bigpar()
 plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
 lines(curve(sample(abs.t,N)), type="o", pch=16, col="grey")
+```
+
+---
+
+### Characterize the false positives
+
+Set a $\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+
+```{r tildet, echo=FALSE}
+t.tilde <- median(abs.t[delta != 0])
+bigpar()
+boxplot(abs(ts$statistic) ~ abs(delta),
+        xlab=expression(abs(delta[i])),
+        ylab=expression(abs(t[i])))
+abline(h=t.tilde,col="red")
+```
+
+---
+
+### Estimates of $\sigma_i$
+
+$\tilde{t} = \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+
+```{r fp, echo=FALSE, fig.width=12}
+sigma.hat <- ts$dm / (ts$statistic * sqrt(4/M))
+transgrey <- rgb(.2,.2,.2,.2)
+bigpar(1,2)
+plot(sigma, sigma.hat, main="all genes",
+     xlab=expression(sigma[i]), ylab=expression(hat(sigma[i])),
+     col=ifelse(delta != 0, "dodgerblue", transgrey))
+legend("topright",c("null","DE"),pch=1,
+       col=c("grey","dodgerblue"),cex=2,bg="white")
+plot(sigma[delta == 0], sigma.hat[delta == 0],
+     main="null genes",
+     xlab=expression(sigma[i]), ylab=expression(hat(sigma[i])),
+     col=ifelse(abs.t[delta == 0] > t.tilde, "red", transgrey))
+legend("topright",c(expression(abs(t[i])<tilde(t)),expression(abs(t[i])>tilde(t))),pch=1,
+       col=c("grey","red"),cex=2,bg="white")
 ```
