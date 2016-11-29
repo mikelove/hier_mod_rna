@@ -25,23 +25,23 @@ Dept of Genetics
 
 ### DNA => RNA
 
-<img src="img/tx_elong.png">
+![](img/tx_elong.png)
 
-<img src="img/tx_em.jpg">
+![](img/tx_em.jpg)
 
 ---
 
 ### Why measure RNA: 
 ### molecular phenotype
 
-<img width=500 src="img/people.jpg">
+![](img/people.jpg)
 
 ---
 
 ### Why measure RNA: 
 ### tissue diversity
 
-<img src="img/roadmap.jpg">
+![](img/roadmap.jpg)
 
 <small>[Roadmap Epigenomics](http://www.roadmapepigenomics.org)</small>
 
@@ -50,7 +50,7 @@ Dept of Genetics
 ### Why measure RNA: 
 ### tissue diversity
 
-<img width=500 src="img/gtex.png">
+![](img/gtex.png)
 
 <small>[GTEx](http://www.gtexportal.org/home/)</small>
 
@@ -59,7 +59,7 @@ Dept of Genetics
 ### Why measure RNA:
 ### within tissue over time
 
-<img src="img/circ.png">
+![](img/circ.png)
 
 <small>[Zhang, et al. Circadian gene expression atlas (2014)](http://www.pnas.org/content/111/45/16219.full)</small>
 
@@ -68,7 +68,7 @@ Dept of Genetics
 ### Why measure RNA: 
 ### discover disease sub-types
 
-<img width=400 src="img/perou.png">
+![](img/perou.png)
 
 <small>[Perou, et al. Molecular portraits of human breast tumours (2000)](http://www.nature.com/nature/journal/v406/n6797/full/406747a0.html)</small>
 
@@ -79,7 +79,7 @@ Dept of Genetics
 * Before sequencing was microarray
 * Signal was captured light (positive, "continuous")
 
-<img width=350 src="img/ma2.png"> <img width=300 src="img/ma.jpg">
+![](img/ma2.png) ![](img/ma.jpg)
 
 
 ---
@@ -95,11 +95,11 @@ Dept of Genetics
 <br>
 
 $$
-\begin{align}
+\begin{aligned}
 X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 \mu_{ij} &= \mu_{i0}, \quad j \in A \\
 \mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
-\end{align}
+\end{aligned}
 $$
 
 <br>
@@ -115,11 +115,11 @@ This is *critical*: different genes *i* have different amount of variability.
 <br>
 
 $$ 
-\begin{align}
+\begin{aligned}
 X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 \mu_{ij} &= \mu_{i0}, \quad j \in A \\
 \mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
-\end{align}
+\end{aligned}
 $$
 
 ---
@@ -161,11 +161,11 @@ $$
 ### Back to the model
 
 $$
-\begin{align}
+\begin{aligned}
 X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 \mu_{ij} &= \mu_{i0}, \quad j \in A \\
 \mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
-\end{align}
+\end{aligned}
 $$
 
 <br>
@@ -241,7 +241,7 @@ $\tilde{\sigma}_i^B \equiv B \bar{\sigma} + (1-B) \hat{\sigma}_i$
 
 Not your standard diagram, need to formalize
 
-<img src="img/plate1.png">
+![](img/plate1.png)
 
 ---
 
@@ -285,20 +285,20 @@ And $d_i$ as the standard residual degrees of freedom
 ### Note that $d_0$ controls B
 
 $$
-\begin{align}
+\begin{aligned}
 \tilde{\sigma}_i^2 &= \frac{d_0 \hat{\sigma}_0^2 + d_i
 \hat{\sigma}_i^2}{d_0 + d_i}  \\
  &= \left( \frac{d_0}{d_0 + d_i} \right) \hat{\sigma}_0^2 +
 \left( \frac{d_i}{d_0 + d_i} \right) \hat{\sigma}_i^2 \\
  &= B \hat{\sigma}_0^2 + (1-B) \hat{\sigma}_i^2
-\end{align}
+\end{aligned}
 $$
 
 ---
 
 ### Proper hierarchical model
 
-<img src="img/plate2.png">
+![](img/plate2.png)
 
 ---
 
@@ -332,7 +332,7 @@ location of *shrinkage* or *moderation*
 
 ### RNA-seq: counting molecules
 
-<img src="img/illumina.png">
+![](img/illumina.png)x
 
 ---
 
@@ -359,9 +359,9 @@ for ~30 million reads (often pairs of reads)
 
 ### RNA-seq: align to genome or transcriptome
 
-<img width=300 src="img/google.png">
+![](img/google.png)
 
-<img src="img/blat.png">
+![](img/blat.png)
 
 ---
 
