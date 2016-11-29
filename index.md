@@ -214,14 +214,13 @@ $\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\de
 
 $\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i$
 
-$\tilde{\sigma}_i^B \equiv (1-B) \hat{\sigma}_i + B \bar{\sigma}$
+$\tilde{\sigma}_i^B \equiv B \bar{\sigma} + (1-B) \hat{\sigma}_i$
 
 ![plot of chunk tildesigma](assets/fig/tildesigma-1.png)
 
 ---
 
-### How does new estimator perform
-
+### New estimator performance by rank
 ![plot of chunk roc2](assets/fig/roc2-1.png)
 
 ---
@@ -232,3 +231,93 @@ $\tilde{\sigma}_i^B \equiv (1-B) \hat{\sigma}_i + B \bar{\sigma}$
 * Replace $\hat{\sigma}_i$ with an estimate which is closer to
   $\bar{\sigma}$
 * Depending on "close", new estimator dominates at all thresholds
+
+---
+
+### How is this hierarchical?
+
+Not your standard diagram, need to formalize
+
+<img src="img/plate1.png">
+
+---
+
+### limma
+
+* Smyth, G. K. (2004) Linear models and empirical Bayes methods for
+assessing differential expression in microarray experiments 
+[PDF](http://www.statsci.org/smyth/pubs/ebayes.pdf)
+* Developed the hierarchical model introduced by Lonnstedt and Speed
+  (2002) for single sample into method for any experiment represented
+  as linear model
+
+<br>
+
+$$
+\frac{1}{\sigma^2_i} \sim \frac{1}{d_0 \sigma_0^2} \chi_{d0}^2 
+$$
+
+<br>
+
+
+
+---
+
+### Why inverse $\chi^2$?
+
+* Conjugacy provides closed form solution
+* Posterior mean for $1/\sigma_i^2$ given $\hat{\sigma}_i^2$ is
+  $1/\tilde{\sigma}_i^2$ with
+
+<br>
+
+$$
+\tilde{\sigma}_i^2 = \frac{d_0 \hat{\sigma}_0^2 + d_i \hat{\sigma}_i^2}{d_0 + d_i} 
+$$
+
+And $d_i$ as the standard residual degrees of freedom
+
+---
+
+### Note that $d_0$ controls B
+
+$$
+\begin{align}
+\tilde{\sigma}_i^2 &= \frac{d_0 \hat{\sigma}_0^2 + d_i
+\hat{\sigma}_i^2}{d_0 + d_i}  \\
+ &= \left( \frac{d_0}{d_0 + d_i} \right) \hat{\sigma}_0^2 +
+\left( \frac{d_i}{d_0 + d_i} \right) \hat{\sigma}_i^2 \\
+ &= B \hat{\sigma}_0^2 + (1-B) \hat{\sigma}_i^2
+\end{align}
+$$
+
+---
+
+### Proper hierarchical model
+
+<img src="img/plate2.png">
+
+---
+
+### Estimation of hyperparameters
+
+* Need to estimate $d_0, \hat{\sigma}_0^2$, which control strength and
+location of *shrinkage* or *moderation*
+* $d_0, \hat{\sigma}_0^2$ estimated via first two moments of $\log \hat{\sigma}_i^2$
+* (Also need to estimate $\upsilon_{0}$, another parameter giving
+  variance of coefficients)
+
+---
+
+### limma vs. naive estimators by rank
+
+
+
+![plot of chunk roc3](assets/fig/roc3-1.png)
+
+---
+
+### Rank is not the full picture
+
+* The limma estimator is also controlling degrees of freedom gained
+  via the moderation

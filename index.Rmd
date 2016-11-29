@@ -270,7 +270,7 @@ legend("topright",c(expression(abs(t[i])<med(t)),expression(abs(t[i])>med(t))),p
 
 $\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i$
 
-$\tilde{\sigma}_i^B \equiv (1-B) \hat{\sigma}_i + B \bar{\sigma}$
+$\tilde{\sigma}_i^B \equiv B \bar{\sigma} + (1-B) \hat{\sigma}_i$
 
 ```{r tildesigma, echo=FALSE, fig.width=4, fig.height=4}
 bigpar(mar=c(5,6,1,1))
@@ -280,21 +280,20 @@ plot(sigma.hat, sigma.hat, asp=1,
 cols <- c("purple","red","orange","green3")
 for (i in 1:4) {
   B <- i/4 
-  sigma.tilde <- (1 - B) * sigma.hat + B * mean(sigma.hat)
+  sigma.tilde <- B * mean(sigma.hat) + (1 - B) * sigma.hat
   points(sigma.hat, sigma.tilde, asp=1, col=cols[i])
 }
 ```
 
 ---
 
-### How does new estimator perform
-
+### New estimator performance by rank
 ```{r roc2, echo=FALSE}
 bigpar()
 plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
 for (i in 1:4) {
   B <- i/4 
-  sigma.tilde <- (1 - B) * sigma.hat + B * mean(sigma.hat)
+  sigma.tilde <- B * mean(sigma.hat) + (1 - B) * sigma.hat
   new.t <- ts$dm / (sigma.tilde * sqrt(4/M))
   lines(curve(abs(new.t)), type="o", pch=16, col=cols[i])
 }
@@ -309,3 +308,112 @@ legend("bottomright",paste0("B=",0:4/4),col=c("black",cols),pch=16,lty=1)
 * Replace $\hat{\sigma}_i$ with an estimate which is closer to
   $\bar{\sigma}$
 * Depending on "close", new estimator dominates at all thresholds
+
+---
+
+### How is this hierarchical?
+
+Not your standard diagram, need to formalize
+
+<img src="img/plate1.png">
+
+---
+
+### limma
+
+* Smyth, G. K. (2004) Linear models and empirical Bayes methods for
+assessing differential expression in microarray experiments 
+[PDF](http://www.statsci.org/smyth/pubs/ebayes.pdf)
+* Developed the hierarchical model introduced by Lonnstedt and Speed
+  (2002) for single sample into method for any experiment represented
+  as linear model
+
+<br>
+
+$$
+\frac{1}{\sigma^2_i} \sim \frac{1}{d_0 \sigma_0^2} \chi_{d0}^2 
+$$
+
+<br>
+
+
+
+---
+
+### Why inverse $\chi^2$?
+
+* Conjugacy provides closed form solution
+* Posterior mean for $1/\sigma_i^2$ given $\hat{\sigma}_i^2$ is
+  $1/\tilde{\sigma}_i^2$ with
+
+<br>
+
+$$
+\tilde{\sigma}_i^2 = \frac{d_0 \hat{\sigma}_0^2 + d_i \hat{\sigma}_i^2}{d_0 + d_i} 
+$$
+
+And $d_i$ as the standard residual degrees of freedom
+
+---
+
+### Note that $d_0$ controls B
+
+$$
+\begin{align}
+\tilde{\sigma}_i^2 &= \frac{d_0 \hat{\sigma}_0^2 + d_i
+\hat{\sigma}_i^2}{d_0 + d_i}  \\
+ &= \left( \frac{d_0}{d_0 + d_i} \right) \hat{\sigma}_0^2 +
+\left( \frac{d_i}{d_0 + d_i} \right) \hat{\sigma}_i^2 \\
+ &= B \hat{\sigma}_0^2 + (1-B) \hat{\sigma}_i^2
+\end{align}
+$$
+
+---
+
+### Proper hierarchical model
+
+<img src="img/plate2.png">
+
+---
+
+### Estimation of hyperparameters
+
+* Need to estimate $d_0, \hat{\sigma}_0^2$, which control strength and
+location of *shrinkage* or *moderation*
+* $d_0, \hat{\sigma}_0^2$ estimated via first two moments of $\log \hat{\sigma}_i^2$
+* (Also need to estimate $\upsilon_{0}$, another parameter giving
+  variance of coefficients)
+
+---
+
+### limma vs. naive estimators by rank
+
+```{r echo=FALSE}
+library(limma)
+design <- model.matrix(~cond)
+fit <- lmFit(X, design)
+eb <- ebayes(fit)
+limma.t <- eb$t[,2]
+```
+
+```{r roc3, echo=FALSE}
+bigpar()
+plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
+for (i in 1:2) {
+  B <- i/4
+  sigma.tilde <- B * mean(sigma.hat) + (1 - B) * sigma.hat
+  new.t <- ts$dm / (sigma.tilde * sqrt(4/M))
+  lines(curve(abs(new.t)), type="o", pch=16, col=cols[i])
+}
+lines(curve(abs(limma.t)), type="o", pch=16, col="dodgerblue")
+legend("bottomright",c(paste0("B=",0:2/4),"limma"),
+       col=c("black",cols[1:2],"dodgerblue"),pch=16,lty=1)
+```
+
+---
+
+### Rank is not the full picture
+
+* The limma estimator is also estimating the degrees of freedom gained
+  via the moderation
+

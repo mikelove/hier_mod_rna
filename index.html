@@ -224,13 +224,13 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
   <h3>New estimator for \(\sigma_i\)</h3>
   <p>\(\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i\)</p>
 
-<p>\(\tilde{\sigma}_i^B \equiv (1-B) \hat{\sigma}_i + B \bar{\sigma}\)</p>
+<p>\(\tilde{\sigma}_i^B \equiv B \bar{\sigma} + (1-B) \hat{\sigma}_i\)</p>
 
 <p><img src="assets/fig/tildesigma-1.png" alt="plot of chunk tildesigma"></p>
 
 </section>
 <section class='' data-state='' id='slide-21'>
-  <h3>How does new estimator perform</h3>
+  <h3>New estimator performance by rank</h3>
   <p><img src="assets/fig/roc2-1.png" alt="plot of chunk roc2"></p>
 
 </section>
@@ -241,6 +241,92 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 <li>Replace \(\hat{\sigma}_i\) with an estimate which is closer to
 \(\bar{\sigma}\)</li>
 <li>Depending on &quot;close&quot;, new estimator dominates at all thresholds</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-23'>
+  <h3>How is this hierarchical?</h3>
+  <p>Not your standard diagram, need to formalize</p>
+
+<p><img src="img/plate1.png"></p>
+
+</section>
+<section class='' data-state='' id='slide-24'>
+  <h3>limma</h3>
+  <ul>
+<li>Smyth, G. K. (2004) Linear models and empirical Bayes methods for
+assessing differential expression in microarray experiments 
+<a href="http://www.statsci.org/smyth/pubs/ebayes.pdf">PDF</a></li>
+<li>Developed the hierarchical model introduced by Lonnstedt and Speed
+(2002) for single sample into method for any experiment represented
+as linear model</li>
+</ul>
+
+<p><br></p>
+
+<p>\[
+\frac{1}{\sigma^2_i} \sim \frac{1}{d_0 \sigma_0^2} \chi_{d0}^2 
+\]</p>
+
+<p><br></p>
+
+</section>
+<section class='' data-state='' id='slide-25'>
+  <h3>Why inverse \(\chi^2\)?</h3>
+  <ul>
+<li>Conjugacy provides closed form solution</li>
+<li>Posterior mean for \(1/\sigma_i^2\) given \(\hat{\sigma}_i^2\) is
+\(1/\tilde{\sigma}_i^2\) with</li>
+</ul>
+
+<p><br></p>
+
+<p>\[
+\tilde{\sigma}_i^2 = \frac{d_0 \hat{\sigma}_0^2 + d_i \hat{\sigma}_i^2}{d_0 + d_i} 
+\]</p>
+
+<p>And \(d_i\) as the standard residual degrees of freedom</p>
+
+</section>
+<section class='' data-state='' id='slide-26'>
+  <h3>Note that \(d_0\) controls B</h3>
+  <p>\[
+\begin{align}
+\tilde{\sigma}_i^2 &= \frac{d_0 \hat{\sigma}_0^2 + d_i
+\hat{\sigma}_i^2}{d_0 + d_i}  \\
+ &= \left( \frac{d_0}{d_0 + d_i} \right) \hat{\sigma}_0^2 +
+\left( \frac{d_i}{d_0 + d_i} \right) \hat{\sigma}_i^2 \\
+ &= B \hat{\sigma}_0^2 + (1-B) \hat{\sigma}_i^2
+\end{align}
+\]</p>
+
+</section>
+<section class='' data-state='' id='slide-27'>
+  <h3>Proper hierarchical model</h3>
+  <p><img src="img/plate2.png"></p>
+
+</section>
+<section class='' data-state='' id='slide-28'>
+  <h3>Estimation of hyperparameters</h3>
+  <ul>
+<li>Need to estimate \(d_0, \hat{\sigma}_0^2\), which control strength and
+location of <em>shrinkage</em> or <em>moderation</em></li>
+<li>\(d_0, \hat{\sigma}_0^2\) estimated via first two moments of \(\log \hat{\sigma}_i^2\)</li>
+<li>(Also need to estimate \(\upsilon_{0}\), another parameter giving
+variance of coefficients)</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-29'>
+  <h3>limma vs. naive estimators by rank</h3>
+  <p><img src="assets/fig/roc3-1.png" alt="plot of chunk roc3"></p>
+
+</section>
+<section class='' data-state='' id='slide-30'>
+  <h3>Rank is not the full picture</h3>
+  <ul>
+<li>The limma estimator is also controlling degrees of freedom gained
+via the moderation</li>
 </ul>
 
 </section>
