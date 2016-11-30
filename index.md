@@ -15,6 +15,8 @@ knit        : slidify::knit2slides
 
 ### Hierarchical Modeling for RNA-seq
 
+<br>
+
 Michael Love
 
 Dept of Biostatistics
@@ -332,11 +334,13 @@ location of *shrinkage* or *moderation*
 
 ### RNA-seq: counting molecules
 
-![](img/illumina.png)x
+![](img/illumina.png)
 
 ---
 
 ### RNA-seq: counting molecules
+
+<br>
 
 ```
 @SRR1265495.1 1/1
@@ -379,8 +383,12 @@ for ~30 million reads (often pairs of reads)
 
 ### Counts
 
-* Either model counts via count distributions and inference with GLM
-* Learn weights associated with log counts
+1. Either model data with count distributions and inference with GLM
+  - [DESeq2](https://www.ncbi.nlm.nih.gov/pubmed/25516281) (2014)
+  - [edgeR](https://www.ncbi.nlm.nih.gov/pubmed/19910308) (2010)
+  - many more
+2. Learn weights associated with log normalized counts and use limma
+  - [limma-voom](https://www.ncbi.nlm.nih.gov/pubmed/24485249) (2014)
 
 ---
 
@@ -388,5 +396,21 @@ for ~30 million reads (often pairs of reads)
 
 ---
 
+### NB model for RNA-seq
+
+Similar to our microarray model for $X_{ij}$
+
+$$
+\begin{aligned}
+K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
+\mu_{ij} &= s_j q_ij
+\end{aligned}
+$$
+
+---
+
 ### Moderation of dispersion
 
+---
+
+### Robust estimation of prior: excluding outliers
