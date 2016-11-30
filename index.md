@@ -394,6 +394,12 @@ for ~30 million reads (often pairs of reads)
 
 ### Negative Binomial / Gamma Poisson
 
+$\textrm{NB}(\mu, \alpha)$
+
+$\textrm{Var} = \mu + \alpha \mu^2$
+
+![plot of chunk negbin](assets/fig/negbin-1.png)
+
 ---
 
 ### NB model for RNA-seq

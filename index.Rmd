@@ -514,6 +514,26 @@ for ~30 million reads (often pairs of reads)
 
 ### Negative Binomial / Gamma Poisson
 
+$\textrm{NB}(\mu, \alpha)$
+
+$\textrm{Var} = \mu + \alpha \mu^2$
+
+```{r negbin, echo=FALSE}
+bigpar(2,2, mar=c(3,3,1,1))
+mu <- 10
+s <- 0:(2*mu)
+s2 <- (0:(mu*20))/10
+plot(s,dpois(s,lambda=mu),type="b",
+     xlab="",ylab="",ylim=c(0,.3), cex=1.5)
+abline(v=mu, col="dodgerblue", lwd=2)
+for (p in c(.8, .4, .08)) {
+  plot(s, dnbinom(s,size=mu*p/(1-p),prob=p),
+       type="b",xlab="",ylab="", ylim=c(0,.3), cex=1.5)
+  lines(s2, dgamma(s2,shape=mu*p/(1-p),rate=p/(1-p)),
+        col="dodgerblue", lwd=2)
+}
+```
+
 ---
 
 ### NB model for RNA-seq
