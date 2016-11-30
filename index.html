@@ -340,11 +340,21 @@ variance of coefficients)</li>
 
 </section>
 <section class='' data-state='' id='slide-31'>
+  <h3>Summary</h3>
+  <ul>
+<li>limma provides a hierarchical model for moderation of
+variance estimates in the context of linear models</li>
+<li>Avoids false positives from under-estimation of variance</li>
+<li>Also addresses the gain in degrees of freedom from moderation</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-32'>
   <h3>RNA-seq: counting molecules</h3>
   <p><img src="img/illumina.png" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-32'>
+<section class='' data-state='' id='slide-33'>
   <h3>RNA-seq: counting molecules</h3>
   <p><br></p>
 
@@ -365,27 +375,29 @@ CTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGT
 <p>for ~30 million reads (often pairs of reads)</p>
 
 </section>
-<section class='' data-state='' id='slide-33'>
-  <h3>RNA-seq: align to genome or transcriptome</h3>
-  <p><img src="img/google.png" alt=""></p>
+<section class='' data-state='' id='slide-34'>
+  <h3>RNA-seq: counting molecules</h3>
+  <p>Align to genome or transcriptome</p>
+
+<p><img src="img/google.png" alt=""></p>
 
 <p><img src="img/blat.png" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-34'>
+<section class='' data-state='' id='slide-35'>
   <h3>RNA-seq: counting molecules</h3>
   <ul>
 <li>Now for each gene and each sample we can obtain a <em>count</em>
 or <em>estimated count</em> of fragments</li>
 <li>Why estimated? Because some fragments cannot be uniquely associated
 with genes or isoforms</li>
-<li>Clever and fast algorithms for probabalistically assigning these</li>
+<li>Clever and fast algorithms for probabilistically assigning</li>
 <li>Assume we have integer counts \(K_{ij}\) of unique fragments or from 
 rounding estimated counts</li>
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-35'>
+<section class='' data-state='' id='slide-36'>
   <h3>Counts</h3>
   <ol>
 <li>Either model data with count distributions and inference with GLM
@@ -403,32 +415,101 @@ rounding estimated counts</li>
 </ol>
 
 </section>
-<section class='' data-state='' id='slide-36'>
-  <h3>Negative Binomial / Gamma Poisson</h3>
-  <p>\(\textrm{NB}(\mu, \alpha)\)</p>
+<section class='' data-state='' id='slide-37'>
+  <h3>Most important for statistical analysis</h3>
+  <ul>
+<li>Total number of fragments is technical artifact</li>
+<li>Heteroskedasticity of counts</li>
+<li>Each gene has different variability</li>
+</ul>
 
-<p>\(\textrm{Var} = \mu + \alpha \mu^2\)</p>
+</section>
+<section class='' data-state='' id='slide-38'>
+  <h3>Total number of fragments</h3>
+  <p><img src="assets/fig/totalnumber-1.png" alt="plot of chunk totalnumber"></p>
+
+</section>
+<section class='' data-state='' id='slide-39'>
+  <h3>Poisson across technical replicates</h3>
+  <ul>
+<li>From <a href="https://www.ncbi.nlm.nih.gov/pubmed?term=20167110">Bullard 2010</a>
+take 7 technical replicates</li>
+<li>Calculate expected value \(\hat{\lambda}_{ij}\) using DESeq2</li>
+<li>\(P(K_{ij} < \hat{\lambda}_{ij})\) assuming \(K_{ij} \sim \textrm{Pois}(\hat{\lambda}_{ij})\)</li>
+</ul>
+
+<p><img src="assets/fig/poisson-1.png" alt="plot of chunk poisson"></p>
+
+</section>
+<section class='' data-state='' id='slide-40'>
+  <h3>However, expression not equal across biological replicates</h3>
+  <p><img src="img/people.jpg" alt=""></p>
+
+</section>
+<section class='' data-state='' id='slide-41'>
+  <h3>Negative Binomial / Gamma Poisson</h3>
+  <p>\(K_{ij} \sim \textrm{NB}(\mu_{ij}, \alpha_i)\)</p>
+
+<p>\(\textrm{Var}(K_{ij}) = \mu_{ij} + \alpha_i \mu_{ij}^2\)</p>
 
 <p><img src="assets/fig/negbin-1.png" alt="plot of chunk negbin"></p>
 
 </section>
-<section class='' data-state='' id='slide-37'>
+<section class='' data-state='' id='slide-42'>
   <h3>NB model for RNA-seq</h3>
-  <p>Similar to our microarray model for \(X_{ij}\)</p>
+  <ul>
+<li>Similar to our microarray model for \(X_{ij}\)</li>
+<li>Added an \(s_j\) to deal with sequencing depth</li>
+</ul>
+
+<p><br></p>
 
 <p>\[
 \begin{aligned}
 K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
-\mu_{ij} &= s_j q_ij
+\mu_{ij} &= s_j q_{ij} \\ 
+\log_2(q_{ij}) &= \beta_{i0}, \quad j \in A \\
+\log_2(q_{ij}) &= \beta_{i0} + \delta_i, \quad j \in B
 \end{aligned}
 \]</p>
 
+<p><br></p>
+
+<p>\(\delta_i \ne 0\) implies DE (differential expression)</p>
+
 </section>
-<section class='' data-state='' id='slide-38'>
+<section class='' data-state='' id='slide-43'>
   <h3>Moderation of dispersion</h3>
-  
+  <ul>
+<li>In <a href="https://www.ncbi.nlm.nih.gov/pubmed/25516281">DESeq2</a>, a prior on \(\log(\alpha_i)\)</li>
+<li>Calculate the mean of normalized counts \(\bar{\mu}_i\)</li>
+<li>A trend line of dispersion over mean \(\alpha_{tr}(\mu)\)</li>
+<li>Width of the prior \(\sigma^2\) estimated via assumption of normal
+sampling variance of \(\log(\hat{\alpha}_i)\)</li>
+</ul>
+
+<p><br></p>
+
+<p>\(\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)\)</p>
+
 </section>
-<section class='' data-state='' id='slide-39'>
+<section class='' data-state='' id='slide-44'>
+  
+  <p>###</p>
+
+<pre><code>## gene-wise dispersion estimates
+</code></pre>
+
+<pre><code>## mean-dispersion relationship
+</code></pre>
+
+<pre><code>## final dispersion estimates
+</code></pre>
+
+<p><img src="assets/fig/disp-1.png" alt="plot of chunk disp"></p>
+
+</section>
+<section class='' data-state='' id='slide-45'>
   <h3>Robust estimation of prior: excluding outliers</h3>
   
 </section>

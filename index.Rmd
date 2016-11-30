@@ -449,6 +449,14 @@ legend("bottomright",c("t","limma"),
        col=c("black","dodgerblue"),pch=16,lty=1)
 ```
 
+---
+
+### Summary
+
+* limma provides a hierarchical model for moderation of
+  variance estimates in the context of linear models
+* Avoids false positives from under-estimation of variance
+* Also addresses the gain in degrees of freedom from moderation
 
 ---
 
@@ -481,7 +489,9 @@ for ~30 million reads (often pairs of reads)
 
 ---
 
-### RNA-seq: align to genome or transcriptome
+### RNA-seq: counting molecules
+
+Align to genome or transcriptome
 
 ![](img/google.png)
 
@@ -495,7 +505,7 @@ for ~30 million reads (often pairs of reads)
   or *estimated count* of fragments
 * Why estimated? Because some fragments cannot be uniquely associated
   with genes or isoforms
-* Clever and fast algorithms for probabalistically assigning these
+* Clever and fast algorithms for probabilistically assigning
 * Assume we have integer counts $K_{ij}$ of unique fragments or from 
   rounding estimated counts
 
@@ -512,13 +522,85 @@ for ~30 million reads (often pairs of reads)
 
 ---
 
+### Most important for statistical analysis
+
+* Total number of fragments is technical artifact
+* Heteroskedasticity of counts
+* Each gene has different variability
+
+---
+
+### Total number of fragments
+
+```{r totalnumber, echo=FALSE, fig.width=14}
+library(airway)
+data(airway)
+bigpar(1,2)
+barplot(sort(colSums(assay(airway))/1e6),names.arg=1:8,
+        ylab="millions of fragments", xlab="samples")
+idx <- c(which.min(colSums(assay(airway))),
+         which.max(colSums(assay(airway))))
+plot(assay(airway)[,idx]+1, log="xy", xlab="sample 1", ylab="sample 8")
+abline(0,1,col="red",lwd=2)
+```
+
+---
+
+### Poisson across technical replicates
+
+* From [Bullard 2010](https://www.ncbi.nlm.nih.gov/pubmed?term=20167110)
+  take 7 technical replicates
+* Calculate expected value $\hat{\lambda}_{ij}$ using DESeq2
+* $P(K_{ij} < \hat{\lambda}_{ij})$ assuming $K_{ij} \sim \textrm{Pois}(\hat{\lambda}_{ij})$
+
+```{r echo=FALSE}
+url <- "http://bowtie-bio.sourceforge.net/recount/ExpressionSets/maqc_eset.RData"
+file <- "maqc_eset.rda"
+if (!file.exists(file)) download.file(url, file)
+load(file)
+library(Biobase)
+library(DESeq2)
+```
+
+```{r poisson, echo=FALSE, fig.width=8, fig.height=6}
+# take 7 replicates
+dat <- exprs(maqc.eset)[,1:7]
+# estimate DESeq column scaling
+sf <- estimateSizeFactorsForMatrix(dat)
+# normalized data
+dat2 <- t(t(dat)/sf)
+rm <- rowMeans(dat2)
+# expected counts
+exp.counts <- outer(rm, sf, "*")
+brks <- c(1,10,25,50,100,250,500,1000,50000)
+pval.counts <- matrix(NA,8,30)
+for (i in 1:8) {
+  idx <- rm > brks[i] & rm < brks[i+1]
+  pvals <- ppois(dat[idx,], exp.counts[idx,])
+  pval.counts[i,] <- hist(pvals, breaks=0:30/30, plot=FALSE)$counts
+}
+bigpar()
+barplot(pval.counts[8:1,], col=8:1,
+        xlab="p-value", ylab="number of genes")
+axis(1,c(0,36),c(0,1))
+legend("topleft",paste("<",brks[-1]),fill=1:8, bg="white", title="row mean")
+```
+
+---
+
+### However, expression not equal across biological replicates
+
+![](img/people.jpg)
+
+---
+
 ### Negative Binomial / Gamma Poisson
 
-$\textrm{NB}(\mu, \alpha)$
+$K_{ij} \sim \textrm{NB}(\mu_{ij}, \alpha_i)$
 
-$\textrm{Var} = \mu + \alpha \mu^2$
+$\textrm{Var}(K_{ij}) = \mu_{ij} + \alpha_i \mu_{ij}^2$
 
-```{r negbin, echo=FALSE}
+```{r negbin, echo=FALSE, fig.width=8, fig.height=6}
 bigpar(2,2, mar=c(3,3,1,1))
 mu <- 10
 s <- 0:(2*mu)
@@ -538,18 +620,50 @@ for (p in c(.8, .4, .08)) {
 
 ### NB model for RNA-seq
 
-Similar to our microarray model for $X_{ij}$
+* Similar to our microarray model for $X_{ij}$
+* Added an $s_j$ to deal with sequencing depth
+
+<br>
 
 $$
 \begin{aligned}
 K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
-\mu_{ij} &= s_j q_ij
+\mu_{ij} &= s_j q_{ij} \\ 
+\log_2(q_{ij}) &= \beta_{i0}, \quad j \in A \\
+\log_2(q_{ij}) &= \beta_{i0} + \delta_i, \quad j \in B
 \end{aligned}
 $$
+
+<br>
+
+$\delta_i \ne 0$ implies DE (differential expression)
 
 ---
 
 ### Moderation of dispersion
+
+* In [DESeq2](https://www.ncbi.nlm.nih.gov/pubmed/25516281), a prior on $\log(\alpha_i)$
+* Calculate the mean of normalized counts $\bar{\mu}_i$
+* A trend line of dispersion over mean $\alpha_{tr}(\mu)$
+* Width of the prior $\sigma^2$ estimated via assumption of normal
+  sampling variance of $\log(\hat{\alpha}_i)$
+
+<br>
+
+$\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
+
+---
+
+###
+
+```{r disp, echo=FALSE}
+dds <- DESeqDataSet(airway, ~dex)
+dds <- dds[rowSums(counts(dds)) > 20,]
+dds <- estimateSizeFactors(dds)
+dds <- estimateDispersions(dds)
+bigpar()
+plotDispEsts(dds, ylim=c(1e-4,10))
+```
 
 ---
 

@@ -329,6 +329,14 @@ location of *shrinkage* or *moderation*
 
 ![plot of chunk roc4](assets/fig/roc4-1.png)
 
+---
+
+### Summary
+
+* limma provides a hierarchical model for moderation of
+  variance estimates in the context of linear models
+* Avoids false positives from under-estimation of variance
+* Also addresses the gain in degrees of freedom from moderation
 
 ---
 
@@ -361,7 +369,9 @@ for ~30 million reads (often pairs of reads)
 
 ---
 
-### RNA-seq: align to genome or transcriptome
+### RNA-seq: counting molecules
+
+Align to genome or transcriptome
 
 ![](img/google.png)
 
@@ -375,7 +385,7 @@ for ~30 million reads (often pairs of reads)
   or *estimated count* of fragments
 * Why estimated? Because some fragments cannot be uniquely associated
   with genes or isoforms
-* Clever and fast algorithms for probabalistically assigning these
+* Clever and fast algorithms for probabilistically assigning
 * Assume we have integer counts $K_{ij}$ of unique fragments or from 
   rounding estimated counts
 
@@ -392,11 +402,44 @@ for ~30 million reads (often pairs of reads)
 
 ---
 
+### Most important for statistical analysis
+
+* Total number of fragments is technical artifact
+* Heteroskedasticity of counts
+* Each gene has different variability
+
+---
+
+### Total number of fragments
+
+![plot of chunk totalnumber](assets/fig/totalnumber-1.png)
+
+---
+
+### Poisson across technical replicates
+
+* From [Bullard 2010](https://www.ncbi.nlm.nih.gov/pubmed?term=20167110)
+  take 7 technical replicates
+* Calculate expected value $\hat{\lambda}_{ij}$ using DESeq2
+* $P(K_{ij} < \hat{\lambda}_{ij})$ assuming $K_{ij} \sim \textrm{Pois}(\hat{\lambda}_{ij})$
+
+
+
+![plot of chunk poisson](assets/fig/poisson-1.png)
+
+---
+
+### However, expression not equal across biological replicates
+
+![](img/people.jpg)
+
+---
+
 ### Negative Binomial / Gamma Poisson
 
-$\textrm{NB}(\mu, \alpha)$
+$K_{ij} \sim \textrm{NB}(\mu_{ij}, \alpha_i)$
 
-$\textrm{Var} = \mu + \alpha \mu^2$
+$\textrm{Var}(K_{ij}) = \mu_{ij} + \alpha_i \mu_{ij}^2$
 
 ![plot of chunk negbin](assets/fig/negbin-1.png)
 
@@ -404,18 +447,56 @@ $\textrm{Var} = \mu + \alpha \mu^2$
 
 ### NB model for RNA-seq
 
-Similar to our microarray model for $X_{ij}$
+* Similar to our microarray model for $X_{ij}$
+* Added an $s_j$ to deal with sequencing depth
+
+<br>
 
 $$
 \begin{aligned}
 K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
-\mu_{ij} &= s_j q_ij
+\mu_{ij} &= s_j q_{ij} \\ 
+\log_2(q_{ij}) &= \beta_{i0}, \quad j \in A \\
+\log_2(q_{ij}) &= \beta_{i0} + \delta_i, \quad j \in B
 \end{aligned}
 $$
+
+<br>
+
+$\delta_i \ne 0$ implies DE (differential expression)
 
 ---
 
 ### Moderation of dispersion
+
+* In [DESeq2](https://www.ncbi.nlm.nih.gov/pubmed/25516281), a prior on $\log(\alpha_i)$
+* Calculate the mean of normalized counts $\bar{\mu}_i$
+* A trend line of dispersion over mean $\alpha_{tr}(\mu)$
+* Width of the prior $\sigma^2$ estimated via assumption of normal
+  sampling variance of $\log(\hat{\alpha}_i)$
+
+<br>
+
+$\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
+
+---
+
+###
+
+
+```
+## gene-wise dispersion estimates
+```
+
+```
+## mean-dispersion relationship
+```
+
+```
+## final dispersion estimates
+```
+
+![plot of chunk disp](assets/fig/disp-1.png)
 
 ---
 
