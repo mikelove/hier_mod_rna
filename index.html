@@ -494,24 +494,25 @@ sampling variance of \(\log(\hat{\alpha}_i)\)</li>
 
 </section>
 <section class='' data-state='' id='slide-44'>
-  
-  <p>###</p>
-
-<pre><code>## gene-wise dispersion estimates
-</code></pre>
-
-<pre><code>## mean-dispersion relationship
-</code></pre>
-
-<pre><code>## final dispersion estimates
-</code></pre>
-
-<p><img src="assets/fig/disp-1.png" alt="plot of chunk disp"></p>
+  <h3>Moderation of dispersion</h3>
+  <p><img src="img/plate3.png" alt=""></p>
 
 </section>
 <section class='' data-state='' id='slide-45'>
-  <h3>Robust estimation of prior: excluding outliers</h3>
-  
+  <h3>Moderation of dispersion</h3>
+  <p><img src="assets/fig/disp-1.png" alt="plot of chunk disp"></p>
+
+</section>
+<section class='' data-state='' id='slide-46'>
+  <h3>Summary</h3>
+  <ul>
+<li>Model for counts similar to the hierarchical linear model,
+but constructed for the dispersion parameter</li>
+<li>Final dispersion estimate plug-in value in DESeq2, edgeR</li>
+<li><a href="https://www.ncbi.nlm.nih.gov/pubmed/23104842">edgeR quasi-likelihood</a> takes into account dispersion estimation uncertainty</li>
+<li><a href="https://www.ncbi.nlm.nih.gov/pubmed/24485249">limma-voom</a> uses weights on log normalized counts</li>
+</ul>
+
 </section>
     </div>
   </div>

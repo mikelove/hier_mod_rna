@@ -481,23 +481,25 @@ $\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
 
 ---
 
-###
+### Moderation of dispersion
+
+![](img/plate3.png)
+
+---
+
+### Moderation of dispersion
 
 
-```
-## gene-wise dispersion estimates
-```
-
-```
-## mean-dispersion relationship
-```
-
-```
-## final dispersion estimates
-```
 
 ![plot of chunk disp](assets/fig/disp-1.png)
 
 ---
 
-### Robust estimation of prior: excluding outliers
+### Summary 
+
+* Model for counts similar to the hierarchical linear model,
+  but constructed for the dispersion parameter
+* Final dispersion estimate plug-in value in DESeq2, edgeR
+* [edgeR quasi-likelihood](https://www.ncbi.nlm.nih.gov/pubmed/23104842) takes into account dispersion estimation uncertainty
+* [limma-voom](https://www.ncbi.nlm.nih.gov/pubmed/24485249) uses weights on log normalized counts
+

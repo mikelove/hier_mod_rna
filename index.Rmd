@@ -654,17 +654,33 @@ $\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
 
 ---
 
-###
+### Moderation of dispersion
 
-```{r disp, echo=FALSE}
+![](img/plate3.png)
+
+---
+
+### Moderation of dispersion
+
+```{r echo=FALSE}
 dds <- DESeqDataSet(airway, ~dex)
 dds <- dds[rowSums(counts(dds)) > 20,]
 dds <- estimateSizeFactors(dds)
-dds <- estimateDispersions(dds)
+dds <- estimateDispersions(dds, quiet=TRUE)
+```
+
+```{r disp, echo=FALSE, fig.width=9}
 bigpar()
 plotDispEsts(dds, ylim=c(1e-4,10))
 ```
 
 ---
 
-### Robust estimation of prior: excluding outliers
+### Summary 
+
+* Model for counts similar to the hierarchical linear model,
+  but constructed for the dispersion parameter
+* Final dispersion estimate plug-in value in DESeq2, edgeR
+* [edgeR quasi-likelihood](https://www.ncbi.nlm.nih.gov/pubmed/23104842) takes into account dispersion estimation uncertainty
+* [limma-voom](https://www.ncbi.nlm.nih.gov/pubmed/24485249) uses weights on log normalized counts
+
