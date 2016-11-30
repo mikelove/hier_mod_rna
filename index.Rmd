@@ -13,7 +13,7 @@ mode        : selfcontained
 knit        : slidify::knit2slides
 ---
 
-### Hierarchical Modeling for RNA-seq
+### Hierarchical Models for RNA-seq
 
 <br>
 
@@ -33,15 +33,13 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA: 
-### molecular phenotype
+### Why measure RNA: molecular phenotype
 
 ![](img/people.jpg)
 
 ---
 
-### Why measure RNA: 
-### tissue diversity
+### Why measure RNA: tissue diversity
 
 ![](img/roadmap.jpg)
 
@@ -49,8 +47,7 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA: 
-### tissue diversity
+### Why measure RNA: tissue diversity
 
 ![](img/gtex.png)
 
@@ -58,8 +55,7 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA:
-### within tissue over time
+### Why measure RNA: within tissue over time
 
 ![](img/circ.png)
 
@@ -67,8 +63,7 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA: 
-### discover disease sub-types
+### Why measure RNA:  disease sub-types
 
 ![](img/perou.png)
 
@@ -78,11 +73,17 @@ Dept of Genetics
 
 ### Step back: pre-sequencing
 
-* Before sequencing was microarray
-* Signal was captured light (positive, "continuous")
+Before sequencing was microarray
 
-![](img/ma2.png) ![](img/ma.jpg)
+![](img/ma2.png) 
 
+---
+
+### Step back: pre-sequencing
+
+Signal was captured light (positive, "continuous")
+
+![](img/ma.jpg)
 
 ---
 
@@ -215,21 +216,16 @@ boxplot(ts$statistic ~ delta,
 
 ### Just looking at ranks
 
-* Black = t-statistics, grey = random order, X = nominal FDR 20%
-
-```{r roc, echo=FALSE}
+```{r echo=FALSE}
 abs.t <- abs(ts$statistic)
 tseq <- seq(from=0,to=max(abs.t),length=400)
 curve <- function(rank) {
   res <- t(sapply(tseq, function(t) {
-    fdr <- mean(delta[rank >= t] == 0)
-    sens <- mean(rank[delta != 0] > t)
+    fdr <- mean(delta[rank >= t] == 0, na.rm=TRUE)
+    sens <- mean(rank[delta != 0] > t, na.rm=TRUE)
     c(FDR=fdr, sensitivity=sens)
   }))
 }
-bigpar()
-plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
-lines(curve(sample(abs.t,N)), type="o", pch=16, col="grey")
 # draw an FDR of 0.2
 calcFDRSens <- function(padj, abs.t, fdr) {
   padj.cut <- sort(padj)[which(sort(padj) > fdr)[1] - 1]
@@ -240,14 +236,27 @@ calcFDRSens <- function(padj, abs.t, fdr) {
 }
 padj <- p.adjust(ts$p.value, method="BH")
 res <- calcFDRSens(padj, abs.t, 0.2)
+```
+
+```{r roc, echo=FALSE}
+bigpar()
+plot(curve(abs.t), type="o", pch=16, xlim=c(0,1), ylim=c(0,1))
+set.seed(1)
+lines(curve(sample(abs.t,N)), type="o", pch=16, col="grey")
 points(res[1], res[2], pch=4, cex=3, lwd=3, col="magenta")
+legend("topleft",c("t-stat","random","20% FDR"),
+       col=c("black","grey","magenta"),
+       pch=c(16,16,4), cex=1.5)
 ```
 
 ---
 
 ### Characterize the false positives
 
-Call $\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+$$
+\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )
+\, \textrm{for} \, i : \delta_i \ne 0
+$$
 
 ```{r mediant, echo=FALSE}
 med.t <- median(abs.t[delta != 0])
@@ -262,7 +271,10 @@ abline(h=med.t,col="red")
 
 ### Estimates of $\sigma_i$
 
-$\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+$$
+\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )
+\, \textrm{for} \, i : \delta_i \ne 0
+$$
 
 ```{r fp, echo=FALSE, fig.width=14}
 sigma.hat <- ts$dm / (ts$statistic * sqrt(4/M))
@@ -285,12 +297,15 @@ legend("topright",c(expression(abs(t[i])<med(t)),expression(abs(t[i])>med(t))),p
 
 ### New estimator for $\sigma_i$
 
-$\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i$
+$$
+\begin{aligned}
+\bar{\sigma} &= \frac{1}{N} \sum\nolimits_{i=1}^N \hat{\sigma}_i \\
+\tilde{\sigma}_i^B &= B \bar{\sigma} + (1-B) \hat{\sigma}_i
+\end{aligned}
+$$
 
-$\tilde{\sigma}_i^B \equiv B \bar{\sigma} + (1-B) \hat{\sigma}_i$
-
-```{r tildesigma, echo=FALSE, fig.width=4, fig.height=4}
-bigpar(mar=c(5,6,1,1))
+```{r tildesigma, echo=FALSE, fig.width=10, fig.height=5}
+bigpar(mar=c(5,15,1,15))
 plot(sigma.hat, sigma.hat, asp=1,
      xlab=expression(hat(sigma[i])),
      ylab=expression(tilde(sigma)[i]^B))
@@ -314,7 +329,7 @@ for (i in 1:4) {
   new.t <- ts$dm / (sigma.tilde * sqrt(4/M))
   lines(curve(abs(new.t)), type="o", pch=16, col=cols[i])
 }
-legend("bottomright",paste0("B=",0:4/4),col=c("black",cols),pch=16,lty=1)
+legend("bottomright",paste0("B=",0:4/4),col=c("black",cols),pch=16,lty=1,cex=1.5)
 ```
 
 ---
@@ -338,12 +353,12 @@ Not your standard diagram, need to formalize
 
 ### limma
 
-* Smyth, G. K. (2004) Linear models and empirical Bayes methods for
-assessing differential expression in microarray experiments 
-[PDF](http://www.statsci.org/smyth/pubs/ebayes.pdf)
-* Developed the hierarchical model introduced by Lonnstedt and Speed
-  (2002) for single sample into method for any experiment represented
-  as linear model
+* [Smyth, G. K. (2004)](http://www.statsci.org/smyth/pubs/ebayes.pdf) 
+  Linear models and empirical Bayes methods for
+  assessing differential expression in microarray experiments 
+* Developed the hierarchical model introduced by 
+  Lonnstedt and Speed (2002) for single sample into method for any
+  experiment represented as linear model
 
 <br>
 
@@ -424,15 +439,12 @@ for (i in 1:2) {
 }
 lines(curve(abs(limma.t)), type="o", pch=16, col="dodgerblue")
 legend("bottomright",c(paste0("B=",0:2/4),"limma"),
-       col=c("black",cols[1:2],"dodgerblue"),pch=16,lty=1)
+       col=c("black",cols[1:2],"dodgerblue"),pch=16,lty=1,cex=1.5)
 ```
 
 ---
 
 ### Rank is not the full picture
-
-* limma also estimating degrees of freedom gained
-* X = nominal FDR 20%
 
 ```{r roc4, echo=FALSE}
 bigpar()
@@ -445,8 +457,9 @@ points(res[1], res[2], pch=4, cex=3, lwd=3, col="magenta")
 padj <- p.adjust(eb$p.value[,2], method="BH")
 res <- calcFDRSens(padj, abs(limma.t), 0.2)
 points(res[1], res[2], pch=4, cex=3, lwd=3, col="blue")
-legend("bottomright",c("t","limma"),
-       col=c("black","dodgerblue"),pch=16,lty=1)
+legend("bottomright",c("t","t 20% FDR","limma","limma 20% FDR"),
+       col=c("black","magenta","dodgerblue","blue"),
+       pch=c(16,4,16,4), cex=1.5)
 ```
 
 ---
@@ -493,8 +506,6 @@ for ~30 million reads (often pairs of reads)
 
 Align to genome or transcriptome
 
-![](img/google.png)
-
 ![](img/blat.png)
 
 ---
@@ -505,7 +516,10 @@ Align to genome or transcriptome
   or *estimated count* of fragments
 * Why estimated? Because some fragments cannot be uniquely associated
   with genes or isoforms
-* Clever and fast algorithms for probabilistically assigning
+* Fast algorithms for probabilistically assigning:
+  - [Salmon](http://biorxiv.org/content/early/2016/08/30/021592)
+  - [Sailfish](http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html) (2014)
+  - [kallisto](http://www.nature.com/nbt/journal/v34/n5/full/nbt.3519.html) (2016)
 * Assume we have integer counts $K_{ij}$ of unique fragments or from 
   rounding estimated counts
 
@@ -546,11 +560,28 @@ abline(0,1,col="red",lwd=2)
 
 ---
 
+### Sampling fragments
+
+```{r sampfrags, echo=FALSE}
+set.seed(1)
+n <- 5e3
+x <- runif(n)
+y <- runif(n)
+theta <- runif(n,0,2*pi)
+col <- sample(rep(c("grey70","red"),n*c(.95,.05)))
+par(mar=c(1,1,1,1))
+nullplot(.1,.9,.1,.9,bty="n",xaxt="n",yaxt="n")
+m <- runif(n,.01,.03)
+segments(x,y,x+m*cos(theta),y+m*sin(theta),col=col,lwd=2)
+```
+
+---
+
 ### Poisson across technical replicates
 
 * From [Bullard 2010](https://www.ncbi.nlm.nih.gov/pubmed?term=20167110)
   take 7 technical replicates
-* Calculate expected value $\hat{\lambda}_{ij}$ using DESeq2
+* Calculate expected value $\hat{\lambda}_{ij}$ using DESeq2 norm
 * $P(K_{ij} < \hat{\lambda}_{ij})$ assuming $K_{ij} \sim \textrm{Pois}(\hat{\lambda}_{ij})$
 
 ```{r echo=FALSE}
@@ -562,7 +593,7 @@ library(Biobase)
 library(DESeq2)
 ```
 
-```{r poisson, echo=FALSE, fig.width=8, fig.height=6}
+```{r poisson, echo=FALSE, fig.width=12, fig.height=5}
 # take 7 replicates
 dat <- exprs(maqc.eset)[,1:7]
 # estimate DESeq column scaling
@@ -579,11 +610,12 @@ for (i in 1:8) {
   pvals <- ppois(dat[idx,], exp.counts[idx,])
   pval.counts[i,] <- hist(pvals, breaks=0:30/30, plot=FALSE)$counts
 }
-bigpar()
+bigpar(mar=c(5,15,2,15))
 barplot(pval.counts[8:1,], col=8:1,
         xlab="p-value", ylab="number of genes")
 axis(1,c(0,36),c(0,1))
-legend("topleft",paste("<",brks[-1]),fill=1:8, bg="white", title="row mean")
+legend("topleft",paste("<",brks[-1]),fill=1:8, bg="white",
+       title="row mean", ncol=2)
 ```
 
 ---
@@ -596,19 +628,22 @@ legend("topleft",paste("<",brks[-1]),fill=1:8, bg="white", title="row mean")
 
 ### Negative Binomial / Gamma Poisson
 
-$K_{ij} \sim \textrm{NB}(\mu_{ij}, \alpha_i)$
+$$
+\begin{aligned}
+K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
+\textrm{Var}(K_{ij}) &= \mu_{ij} + \alpha_i \mu_{ij}^2
+\end{aligned}
+$$
 
-$\textrm{Var}(K_{ij}) = \mu_{ij} + \alpha_i \mu_{ij}^2$
-
-```{r negbin, echo=FALSE, fig.width=8, fig.height=6}
-bigpar(2,2, mar=c(3,3,1,1))
+```{r negbin, echo=FALSE, fig.width=10, fig.height=6}
+bigpar(2,3, mar=c(3,3,1,1))
 mu <- 10
 s <- 0:(2*mu)
-s2 <- (0:(mu*20))/10
+s2 <- seq(from=0,to=2*mu,length=100)
 plot(s,dpois(s,lambda=mu),type="b",
      xlab="",ylab="",ylim=c(0,.3), cex=1.5)
 abline(v=mu, col="dodgerblue", lwd=2)
-for (p in c(.8, .4, .08)) {
+for (p in c(.8, .5, .2, .1, .05)) {
   plot(s, dnbinom(s,size=mu*p/(1-p),prob=p),
        type="b",xlab="",ylab="", ylim=c(0,.3), cex=1.5)
   lines(s2, dgamma(s2,shape=mu*p/(1-p),rate=p/(1-p)),
@@ -650,7 +685,9 @@ $\delta_i \ne 0$ implies DE (differential expression)
 
 <br>
 
-$\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
+$$
+\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)
+$$
 
 ---
 
@@ -663,6 +700,8 @@ $\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
 ### Moderation of dispersion
 
 ```{r echo=FALSE}
+library(airway)
+data(airway)
 dds <- DESeqDataSet(airway, ~dex)
 dds <- dds[rowSums(counts(dds)) > 20,]
 dds <- estimateSizeFactors(dds)
@@ -672,6 +711,43 @@ dds <- estimateDispersions(dds, quiet=TRUE)
 ```{r disp, echo=FALSE, fig.width=9}
 bigpar()
 plotDispEsts(dds, ylim=c(1e-4,10))
+```
+
+---
+
+### Evaluate via simulation
+
+```{r echo=FALSE}
+set.seed(1)
+dmr <- function(x) exp(rnorm(5000,log(0.05),.5))
+delta <- sample(rep(c(0,2),5000*c(.9,.1)))
+dds <- makeExampleDESeqDataSet(m=6, n=5000,
+                               betaSD=delta,
+                               interceptMean=10,
+                               interceptSD=3,
+                               dispMeanRel=dmr)
+dds <- DESeq(dds, fitType="mean", quiet=TRUE)
+res <- results(dds)
+dds2 <- dds
+dispersions(dds2) <- mcols(dds)$dispGeneEst
+dds2 <- nbinomWaldTest(dds2, quiet=TRUE)
+res2 <- results(dds2)
+res3 <- rowttests(log2(counts(dds,normalized=TRUE)+1) +
+                  rnorm(6,0,.01), # prevents SD=0
+                  dds$condition)
+```
+
+```{r rnasim, echo=FALSE}
+tseq <- seq(from=0,to=20,length=400)
+curve.res <- curve(abs(res$stat))
+curve.res2 <- curve(abs(res2$stat))
+curve.res3 <- curve(abs(res3$statistic))
+bigpar()
+plot(curve.res3, type="o", pch=16, xlab="FDR", ylab="sensitivity")
+points(curve.res, col="dodgerblue", type="o", pch=16)
+points(curve.res2, col="green4", type="o", pch=16)
+legend("bottomright",c("DESeq2","NB GLM","t-test log(ncount+1)"),
+       pch=16,col=c("dodgerblue","green4","black"),lwd=1,cex=1.5)
 ```
 
 ---

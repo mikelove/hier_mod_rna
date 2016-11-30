@@ -13,7 +13,7 @@ mode        : selfcontained
 knit        : slidify::knit2slides
 ---
 
-### Hierarchical Modeling for RNA-seq
+### Hierarchical Models for RNA-seq
 
 <br>
 
@@ -33,15 +33,13 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA: 
-### molecular phenotype
+### Why measure RNA: molecular phenotype
 
 ![](img/people.jpg)
 
 ---
 
-### Why measure RNA: 
-### tissue diversity
+### Why measure RNA: tissue diversity
 
 ![](img/roadmap.jpg)
 
@@ -49,8 +47,7 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA: 
-### tissue diversity
+### Why measure RNA: tissue diversity
 
 ![](img/gtex.png)
 
@@ -58,8 +55,7 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA:
-### within tissue over time
+### Why measure RNA: within tissue over time
 
 ![](img/circ.png)
 
@@ -67,8 +63,7 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA: 
-### discover disease sub-types
+### Why measure RNA:  disease sub-types
 
 ![](img/perou.png)
 
@@ -78,11 +73,17 @@ Dept of Genetics
 
 ### Step back: pre-sequencing
 
-* Before sequencing was microarray
-* Signal was captured light (positive, "continuous")
+Before sequencing was microarray
 
-![](img/ma2.png) ![](img/ma.jpg)
+![](img/ma2.png) 
 
+---
+
+### Step back: pre-sequencing
+
+Signal was captured light (positive, "continuous")
+
+![](img/ma.jpg)
 
 ---
 
@@ -193,7 +194,7 @@ $$
 
 ### Just looking at ranks
 
-* Black = t-statistics, grey = random order, X = nominal FDR 20%
+
 
 ![plot of chunk roc](assets/fig/roc-1.png)
 
@@ -201,7 +202,10 @@ $$
 
 ### Characterize the false positives
 
-Call $\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+$$
+\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )
+\, \textrm{for} \, i : \delta_i \ne 0
+$$
 
 ![plot of chunk mediant](assets/fig/mediant-1.png)
 
@@ -209,7 +213,10 @@ Call $\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t.
 
 ### Estimates of $\sigma_i$
 
-$\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\delta_i \ne 0$
+$$
+\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )
+\, \textrm{for} \, i : \delta_i \ne 0
+$$
 
 ![plot of chunk fp](assets/fig/fp-1.png)
 
@@ -217,9 +224,12 @@ $\textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )$ for $i$ s.t. $\de
 
 ### New estimator for $\sigma_i$
 
-$\bar{\sigma} = \frac{1}{N} \sum_{i=1}^N \hat{\sigma}_i$
-
-$\tilde{\sigma}_i^B \equiv B \bar{\sigma} + (1-B) \hat{\sigma}_i$
+$$
+\begin{aligned}
+\bar{\sigma} &= \frac{1}{N} \sum\nolimits_{i=1}^N \hat{\sigma}_i \\
+\tilde{\sigma}_i^B &= B \bar{\sigma} + (1-B) \hat{\sigma}_i
+\end{aligned}
+$$
 
 ![plot of chunk tildesigma](assets/fig/tildesigma-1.png)
 
@@ -249,12 +259,12 @@ Not your standard diagram, need to formalize
 
 ### limma
 
-* Smyth, G. K. (2004) Linear models and empirical Bayes methods for
-assessing differential expression in microarray experiments 
-[PDF](http://www.statsci.org/smyth/pubs/ebayes.pdf)
-* Developed the hierarchical model introduced by Lonnstedt and Speed
-  (2002) for single sample into method for any experiment represented
-  as linear model
+* [Smyth, G. K. (2004)](http://www.statsci.org/smyth/pubs/ebayes.pdf) 
+  Linear models and empirical Bayes methods for
+  assessing differential expression in microarray experiments 
+* Developed the hierarchical model introduced by 
+  Lonnstedt and Speed (2002) for single sample into method for any
+  experiment represented as linear model
 
 <br>
 
@@ -324,9 +334,6 @@ location of *shrinkage* or *moderation*
 
 ### Rank is not the full picture
 
-* limma also estimating degrees of freedom gained
-* X = nominal FDR 20%
-
 ![plot of chunk roc4](assets/fig/roc4-1.png)
 
 ---
@@ -373,8 +380,6 @@ for ~30 million reads (often pairs of reads)
 
 Align to genome or transcriptome
 
-![](img/google.png)
-
 ![](img/blat.png)
 
 ---
@@ -385,7 +390,10 @@ Align to genome or transcriptome
   or *estimated count* of fragments
 * Why estimated? Because some fragments cannot be uniquely associated
   with genes or isoforms
-* Clever and fast algorithms for probabilistically assigning
+* Fast algorithms for probabilistically assigning:
+  - [Salmon](http://biorxiv.org/content/early/2016/08/30/021592)
+  - [Sailfish](http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html) (2014)
+  - [kallisto](http://www.nature.com/nbt/journal/v34/n5/full/nbt.3519.html) (2016)
 * Assume we have integer counts $K_{ij}$ of unique fragments or from 
   rounding estimated counts
 
@@ -416,11 +424,17 @@ Align to genome or transcriptome
 
 ---
 
+### Sampling fragments
+
+![plot of chunk sampfrags](assets/fig/sampfrags-1.png)
+
+---
+
 ### Poisson across technical replicates
 
 * From [Bullard 2010](https://www.ncbi.nlm.nih.gov/pubmed?term=20167110)
   take 7 technical replicates
-* Calculate expected value $\hat{\lambda}_{ij}$ using DESeq2
+* Calculate expected value $\hat{\lambda}_{ij}$ using DESeq2 norm
 * $P(K_{ij} < \hat{\lambda}_{ij})$ assuming $K_{ij} \sim \textrm{Pois}(\hat{\lambda}_{ij})$
 
 
@@ -437,9 +451,12 @@ Align to genome or transcriptome
 
 ### Negative Binomial / Gamma Poisson
 
-$K_{ij} \sim \textrm{NB}(\mu_{ij}, \alpha_i)$
-
-$\textrm{Var}(K_{ij}) = \mu_{ij} + \alpha_i \mu_{ij}^2$
+$$
+\begin{aligned}
+K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
+\textrm{Var}(K_{ij}) &= \mu_{ij} + \alpha_i \mu_{ij}^2
+\end{aligned}
+$$
 
 ![plot of chunk negbin](assets/fig/negbin-1.png)
 
@@ -477,7 +494,9 @@ $\delta_i \ne 0$ implies DE (differential expression)
 
 <br>
 
-$\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
+$$
+\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)
+$$
 
 ---
 
@@ -492,6 +511,14 @@ $\log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)$
 
 
 ![plot of chunk disp](assets/fig/disp-1.png)
+
+---
+
+### Evaluate via simulation
+
+
+
+![plot of chunk rnasim](assets/fig/rnasim-1.png)
 
 ---
 
