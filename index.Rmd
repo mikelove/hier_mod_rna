@@ -283,6 +283,7 @@ bigpar(1,2, mar=c(5,6,3,2))
 plot(sigma, sigma.hat, main="all genes",
      xlab=expression(sigma[i]), ylab=expression(hat(sigma[i])),
      col=ifelse(delta != 0, "dodgerblue", transgrey))
+abline(0,1)
 legend("topright",c("null","DE"),pch=1,
        col=c("grey","dodgerblue"),cex=2,bg="white")
 plot(sigma[delta == 0], sigma.hat[delta == 0],
@@ -291,6 +292,7 @@ plot(sigma[delta == 0], sigma.hat[delta == 0],
      col=ifelse(abs.t[delta == 0] > med.t, "red", transgrey))
 legend("topright",c(expression(abs(t[i])<med(t)),expression(abs(t[i])>med(t))),pch=1,
        col=c("grey","red"),cex=2,bg="white")
+abline(0,1)
 ```
 
 ---
@@ -546,7 +548,7 @@ Align to genome or transcriptome
 
 ### Total number of fragments
 
-```{r totalnumber, echo=FALSE, fig.width=14}
+```{r totalnumber, echo=FALSE, results="hide", fig.width=14}
 library(airway)
 data(airway)
 bigpar(1,2)
