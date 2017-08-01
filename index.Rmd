@@ -3,7 +3,7 @@ title       : Hierarchical Models for RNA-seq
 author      : Michael Love
 framework   : revealjs
 revealjs: # https://github.com/hakimel/reveal.js/
-  transition  : linear
+  transition  : none
   theme       : serif
   center      : "true"
 highlighter : highlight.js
@@ -33,7 +33,7 @@ Dept of Genetics
 
 ---
 
-### Why measure RNA: molecular phenotype
+### Why measure RNA as phenotype
 
 ![](img/people.jpg)
 
@@ -127,7 +127,7 @@ $$
 
 ---
 
-### Goal of differential expression testing
+### Goal of differential expression
 
 * Find a set of genes for which $\delta_i \ne 0$
 * And which obeys false discovery rate bounds
@@ -519,11 +519,15 @@ Align to genome or transcriptome
 * Why estimated? Because some fragments cannot be uniquely associated
   with genes or isoforms
 * Fast algorithms for probabilistically assigning:
-  - [Salmon](http://biorxiv.org/content/early/2016/08/30/021592)
   - [Sailfish](http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html) (2014)
   - [kallisto](http://www.nature.com/nbt/journal/v34/n5/full/nbt.3519.html) (2016)
+  - [Salmon](http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html)** (2017)
 * Assume we have integer counts $K_{ij}$ of unique fragments or from 
   rounding estimated counts
+
+<br>
+
+** With technical bias modeling
 
 ---
 
@@ -538,7 +542,7 @@ Align to genome or transcriptome
 
 ---
 
-### Most important for statistical analysis
+### Important for statistical analysis
 
 * Total number of fragments is technical artifact
 * Heteroskedasticity of counts
@@ -549,7 +553,7 @@ Align to genome or transcriptome
 ### Total number of fragments
 
 ```{r totalnumber, echo=FALSE, results="hide", fig.width=14}
-library(airway)
+suppressPackageStartupMessages(library(airway))
 data(airway)
 bigpar(1,2)
 barplot(sort(colSums(assay(airway))/1e6),names.arg=1:8,

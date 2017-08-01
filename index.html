@@ -36,7 +36,7 @@
 
 </section>
 <section class='' data-state='' id='slide-3'>
-  <h3>Why measure RNA: molecular phenotype</h3>
+  <h3>Why measure RNA as phenotype</h3>
   <p><img src="img/people.jpg" alt=""></p>
 
 </section>
@@ -123,7 +123,7 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 
 </section>
 <section class='' data-state='' id='slide-12'>
-  <h3>Goal of differential expression testing</h3>
+  <h3>Goal of differential expression</h3>
   <ul>
 <li>Find a set of genes for which \(\delta_i \ne 0\)</li>
 <li>And which obeys false discovery rate bounds</li>
@@ -386,13 +386,17 @@ with genes or isoforms</li>
 <li>Fast algorithms for probabilistically assigning:
 
 <ul>
-<li><a href="http://biorxiv.org/content/early/2016/08/30/021592">Salmon</a></li>
 <li><a href="http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html">Sailfish</a> (2014)</li>
 <li><a href="http://www.nature.com/nbt/journal/v34/n5/full/nbt.3519.html">kallisto</a> (2016)</li>
+<li><a href="http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html">Salmon</a>** (2017)</li>
 </ul></li>
 <li>Assume we have integer counts \(K_{ij}\) of unique fragments or from 
 rounding estimated counts</li>
 </ul>
+
+<p><br></p>
+
+<p>** With technical bias modeling</p>
 
 </section>
 <section class='' data-state='' id='slide-37'>
@@ -414,7 +418,7 @@ rounding estimated counts</li>
 
 </section>
 <section class='' data-state='' id='slide-38'>
-  <h3>Most important for statistical analysis</h3>
+  <h3>Important for statistical analysis</h3>
   <ul>
 <li>Total number of fragments is technical artifact</li>
 <li>Heteroskedasticity of counts</li>
@@ -541,7 +545,7 @@ but constructed for the dispersion parameter</li>
     history: true,
     center: true,
     theme: Reveal.getQueryHash().theme || 'serif', 
-    transition: Reveal.getQueryHash().transition || 'linear', 
+    transition: Reveal.getQueryHash().transition || 'none', 
     dependencies: [
     // Cross-browser shim that fully implements classList -
     // https://github.com/eligrey/classList.js/
