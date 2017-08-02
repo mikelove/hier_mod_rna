@@ -336,6 +336,35 @@ legend("bottomright",paste0("B=",0:4/4),col=c("black",cols),pch=16,lty=1,cex=1.5
 
 ---
 
+### New estimators by |t|
+```{r newestmediant, echo=FALSE}
+B <- 1/2
+sigma.tilde <- B * mean(sigma.hat) + (1 - B) * sigma.hat
+new.t <-  ts$dm / (sigma.tilde * sqrt(4/M))
+bigpar(1,2)
+p <- .75
+boxplot(abs(ts$statistic) ~ abs(delta),
+        xlab=expression(abs(delta[i])),
+        ylab=expression(abs(t[i])),
+        ylim=c(0,10))
+q <- quantile(abs(ts$statistic[delta != 0]),p)
+abline(h=q, col="blue")
+tsum <- sum(abs(ts$statistic[delta==0]) > q)
+points(rep(1,tsum),abs(ts$statistic[delta==0 & abs(ts$statistic) > q]),col="blue",lwd=2)
+text(1,q+.5,tsum,pos=4,col="blue")
+boxplot(abs(new.t) ~ abs(delta),
+        xlab=expression(abs(delta[i])),
+        ylab=expression(abs(t[i])),
+        ylim=c(0,10))
+q <- quantile(abs(new.t[delta != 0]),p)
+abline(h=q, col="blue")
+tsum <- sum(abs(new.t[delta==0]) > q)
+points(rep(1,tsum),abs(new.t[delta==0 & abs(new.t) > q]),col="blue",lwd=2)
+text(1,q+.5,tsum,pos=4,col="blue")
+```
+
+---
+
 ### Summary
 
 * Top false positives were coming from genes with too low $\hat{\sigma}_i$

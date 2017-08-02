@@ -241,6 +241,11 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 
 </section>
 <section class='' data-state='' id='slide-23'>
+  <h3>New estimators by |t|</h3>
+  <p><img src="assets/fig/newestmediant-1.png" alt="plot of chunk newestmediant"></p>
+
+</section>
+<section class='' data-state='' id='slide-24'>
   <h3>Summary</h3>
   <ul>
 <li>Top false positives were coming from genes with too low \(\hat{\sigma}_i\)</li>
@@ -250,14 +255,14 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-24'>
+<section class='' data-state='' id='slide-25'>
   <h3>How is this hierarchical?</h3>
   <p>Not your standard diagram, need to formalize</p>
 
 <p><img src="img/plate1.png" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-25'>
+<section class='' data-state='' id='slide-26'>
   <h3>limma</h3>
   <ul>
 <li><a href="http://www.statsci.org/smyth/pubs/ebayes.pdf">Smyth, G. K. (2004)</a> 
@@ -277,7 +282,7 @@ experiment represented as linear model</li>
 <p><br></p>
 
 </section>
-<section class='' data-state='' id='slide-26'>
+<section class='' data-state='' id='slide-27'>
   <h3>Why inverse \(\chi^2\)?</h3>
   <ul>
 <li>Conjugacy provides closed form solution</li>
@@ -294,7 +299,7 @@ experiment represented as linear model</li>
 <p>And \(d_i\) as the standard residual degrees of freedom</p>
 
 </section>
-<section class='' data-state='' id='slide-27'>
+<section class='' data-state='' id='slide-28'>
   <h3>Note that \(d_0\) controls B</h3>
   <p>\[
 \begin{aligned}
@@ -307,12 +312,12 @@ experiment represented as linear model</li>
 \]</p>
 
 </section>
-<section class='' data-state='' id='slide-28'>
+<section class='' data-state='' id='slide-29'>
   <h3>Proper hierarchical model</h3>
   <p><img src="img/plate2.png" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-29'>
+<section class='' data-state='' id='slide-30'>
   <h3>Estimation of hyperparameters</h3>
   <ul>
 <li>Need to estimate \(d_0, \hat{\sigma}_0^2\), which control strength and
@@ -323,17 +328,17 @@ variance of coefficients)</li>
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-30'>
+<section class='' data-state='' id='slide-31'>
   <h3>limma vs. naive estimators by rank</h3>
   <p><img src="assets/fig/roc3-1.png" alt="plot of chunk roc3"></p>
 
 </section>
-<section class='' data-state='' id='slide-31'>
+<section class='' data-state='' id='slide-32'>
   <h3>Rank is not the full picture</h3>
   <p><img src="assets/fig/roc4-1.png" alt="plot of chunk roc4"></p>
 
 </section>
-<section class='' data-state='' id='slide-32'>
+<section class='' data-state='' id='slide-33'>
   <h3>Summary</h3>
   <ul>
 <li>limma provides a hierarchical model for moderation of
@@ -343,12 +348,12 @@ variance estimates in the context of linear models</li>
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-33'>
+<section class='' data-state='' id='slide-34'>
   <h3>RNA-seq: counting molecules</h3>
   <p><img src="img/illumina.png" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-34'>
+<section class='' data-state='' id='slide-35'>
   <h3>RNA-seq: counting molecules</h3>
   <p><br></p>
 
@@ -369,14 +374,14 @@ CTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGT
 <p>for ~30 million reads (often pairs of reads)</p>
 
 </section>
-<section class='' data-state='' id='slide-35'>
+<section class='' data-state='' id='slide-36'>
   <h3>RNA-seq: counting molecules</h3>
   <p>Align to genome or transcriptome</p>
 
 <p><img src="img/blat.png" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-36'>
+<section class='' data-state='' id='slide-37'>
   <h3>RNA-seq: counting molecules</h3>
   <ul>
 <li>Now for each gene and each sample we can obtain a <em>count</em>
@@ -399,7 +404,7 @@ rounding estimated counts</li>
 <p>** With technical bias modeling</p>
 
 </section>
-<section class='' data-state='' id='slide-37'>
+<section class='' data-state='' id='slide-38'>
   <h3>Counts</h3>
   <ol>
 <li>Either model data with count distributions and inference with GLM
@@ -417,7 +422,7 @@ rounding estimated counts</li>
 </ol>
 
 </section>
-<section class='' data-state='' id='slide-38'>
+<section class='' data-state='' id='slide-39'>
   <h3>Important for statistical analysis</h3>
   <ul>
 <li>Total number of fragments is technical artifact</li>
@@ -426,17 +431,17 @@ rounding estimated counts</li>
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-39'>
+<section class='' data-state='' id='slide-40'>
   <h3>Total number of fragments</h3>
   <p><img src="assets/fig/totalnumber-1.png" alt="plot of chunk totalnumber"></p>
 
 </section>
-<section class='' data-state='' id='slide-40'>
+<section class='' data-state='' id='slide-41'>
   <h3>Sampling fragments</h3>
   <p><img src="assets/fig/sampfrags-1.png" alt="plot of chunk sampfrags"></p>
 
 </section>
-<section class='' data-state='' id='slide-41'>
+<section class='' data-state='' id='slide-42'>
   <h3>Poisson across technical replicates</h3>
   <ul>
 <li>From <a href="https://www.ncbi.nlm.nih.gov/pubmed?term=20167110">Bullard 2010</a>
@@ -448,12 +453,12 @@ take 7 technical replicates</li>
 <p><img src="assets/fig/poisson-1.png" alt="plot of chunk poisson"></p>
 
 </section>
-<section class='' data-state='' id='slide-42'>
+<section class='' data-state='' id='slide-43'>
   <h3>However, expression not equal across biological replicates</h3>
   <p><img src="img/people.jpg" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-43'>
+<section class='' data-state='' id='slide-44'>
   <h3>Negative Binomial / Gamma Poisson</h3>
   <p>\[
 \begin{aligned}
@@ -465,7 +470,7 @@ K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
 <p><img src="assets/fig/negbin-1.png" alt="plot of chunk negbin"></p>
 
 </section>
-<section class='' data-state='' id='slide-44'>
+<section class='' data-state='' id='slide-45'>
   <h3>NB model for RNA-seq</h3>
   <ul>
 <li>Similar to our microarray model for \(X_{ij}\)</li>
@@ -488,7 +493,7 @@ K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
 <p>\(\delta_i \ne 0\) implies DE (differential expression)</p>
 
 </section>
-<section class='' data-state='' id='slide-45'>
+<section class='' data-state='' id='slide-46'>
   <h3>Moderation of dispersion</h3>
   <ul>
 <li>In <a href="https://www.ncbi.nlm.nih.gov/pubmed/25516281">DESeq2</a>, a prior on \(\log(\alpha_i)\)</li>
@@ -505,22 +510,22 @@ sampling variance of \(\log(\hat{\alpha}_i)\)</li>
 \]</p>
 
 </section>
-<section class='' data-state='' id='slide-46'>
+<section class='' data-state='' id='slide-47'>
   <h3>Moderation of dispersion</h3>
   <p><img src="img/plate3.png" alt=""></p>
 
 </section>
-<section class='' data-state='' id='slide-47'>
+<section class='' data-state='' id='slide-48'>
   <h3>Moderation of dispersion</h3>
   <p><img src="assets/fig/disp-1.png" alt="plot of chunk disp"></p>
 
 </section>
-<section class='' data-state='' id='slide-48'>
+<section class='' data-state='' id='slide-49'>
   <h3>Evaluate via simulation</h3>
   <p><img src="assets/fig/rnasim-1.png" alt="plot of chunk rnasim"></p>
 
 </section>
-<section class='' data-state='' id='slide-49'>
+<section class='' data-state='' id='slide-50'>
   <h3>Summary</h3>
   <ul>
 <li>Model for counts similar to the hierarchical linear model,

@@ -240,6 +240,12 @@ $$
 
 ---
 
+### New estimators by |t|
+
+![plot of chunk newestmediant](assets/fig/newestmediant-1.png)
+
+---
+
 ### Summary
 
 * Top false positives were coming from genes with too low $\hat{\sigma}_i$
