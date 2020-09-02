@@ -87,6 +87,14 @@ Signal was captured light (positive, "continuous")
 
 ---
 
+### Formalize
+
+* Formalize as a simple statistical model
+* Observed data $X_{ij}$ as a R.V. following a distribution
+* Distributional parameters of interest 
+
+---
+
 ### Motivating problem
 
 * Gene expression for *i*=1,...,N genes and *j*=1,...,M samples
@@ -130,7 +138,7 @@ $$
 ### Goal of differential expression
 
 * Find a set of genes for which $\delta_i \ne 0$
-* And which obeys false discovery rate bounds
+* We want to target a false discovery rate (FDR) cutoff
 * For genes in our set G at FDR threshold z
 
 <br>
@@ -241,7 +249,6 @@ $$
 ---
 
 ### New estimators by |t|
-
 ![plot of chunk newestmediant](assets/fig/newestmediant-1.png)
 
 ---
@@ -338,7 +345,7 @@ location of *shrinkage* or *moderation*
 
 ---
 
-### Rank is not the full picture
+### Operating characteristics (FP & FN)
 
 ![plot of chunk roc4](assets/fig/roc4-1.png)
 
@@ -396,16 +403,11 @@ Align to genome or transcriptome
   or *estimated count* of fragments
 * Why estimated? Because some fragments cannot be uniquely associated
   with genes or isoforms
-* Fast algorithms for probabilistically assigning:
-  - [Sailfish](http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html) (2014)
+* Fast algorithms for probabilistically assignment:
   - [kallisto](http://www.nature.com/nbt/journal/v34/n5/full/nbt.3519.html) (2016)
-  - [Salmon](http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html)** (2017)
+  - [Salmon](http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html) (2017)
 * Assume we have integer counts $K_{ij}$ of unique fragments or from 
   rounding estimated counts
-
-<br>
-
-** With technical bias modeling
 
 ---
 
@@ -539,4 +541,4 @@ $$
 * Final dispersion estimate plug-in value in DESeq2, edgeR
 * [edgeR quasi-likelihood](https://www.ncbi.nlm.nih.gov/pubmed/23104842) takes into account dispersion estimation uncertainty
 * [limma-voom](https://www.ncbi.nlm.nih.gov/pubmed/24485249) uses weights on log normalized counts
-
+* [apeglm](https://doi.org/10.1093/bioinformatics/bty895) uses Cauchy prior (heavy tails) on effect sizes

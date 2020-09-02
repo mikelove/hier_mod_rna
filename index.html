@@ -27,6 +27,7 @@
 
 <p>Dept of Genetics</p>
 
+  
 </section>
 <section class='' data-state='' id='slide-2'>
   <h3>DNA =&gt; RNA</h3>
@@ -34,11 +35,13 @@
 
 <p><img src="img/tx_em.jpg" alt=""></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-3'>
   <h3>Why measure RNA as phenotype</h3>
   <p><img src="img/people.jpg" alt=""></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-4'>
   <h3>Why measure RNA: tissue diversity</h3>
@@ -46,6 +49,7 @@
 
 <p><small><a href="http://www.roadmapepigenomics.org">Roadmap Epigenomics</a></small></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-5'>
   <h3>Why measure RNA: tissue diversity</h3>
@@ -53,6 +57,7 @@
 
 <p><small><a href="http://www.gtexportal.org/home/">GTEx</a></small></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-6'>
   <h3>Why measure RNA: within tissue over time</h3>
@@ -60,6 +65,7 @@
 
 <p><small><a href="http://www.pnas.org/content/111/45/16219.full">Zhang, et al. Circadian gene expression atlas (2014)</a></small></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-7'>
   <h3>Why measure RNA:  disease sub-types</h3>
@@ -67,6 +73,7 @@
 
 <p><small><a href="http://www.nature.com/nature/journal/v406/n6797/full/406747a0.html">Perou, et al. Molecular portraits of human breast tumours (2000)</a></small></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-8'>
   <h3>Step back: pre-sequencing</h3>
@@ -74,6 +81,7 @@
 
 <p><img src="img/ma2.png" alt=""> </p>
 
+  
 </section>
 <section class='' data-state='' id='slide-9'>
   <h3>Step back: pre-sequencing</h3>
@@ -81,8 +89,19 @@
 
 <p><img src="img/ma.jpg" alt=""></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-10'>
+  <h3>Formalize</h3>
+  <ul>
+<li>Formalize as a simple statistical model</li>
+<li>Observed data \(X_{ij}\) as a R.V. following a distribution</li>
+<li>Distributional parameters of interest </li>
+</ul>
+
+  
+</section>
+<section class='' data-state='' id='slide-11'>
   <h3>Motivating problem</h3>
   <ul>
 <li>Gene expression for <em>i</em>=1,...,N genes and <em>j</em>=1,...,M samples</li>
@@ -106,8 +125,9 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 
 <p>\(\delta_i \ne 0\) implies DE (differential expression)</p>
 
+  
 </section>
-<section class='' data-state='' id='slide-11'>
+<section class='' data-state='' id='slide-12'>
   <h3>Note \(\sigma_i\)</h3>
   <p>This is <em>critical</em>: different genes <em>i</em> have different amount of variability.</p>
 
@@ -121,12 +141,13 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 \end{aligned}
 \]</p>
 
+  
 </section>
-<section class='' data-state='' id='slide-12'>
+<section class='' data-state='' id='slide-13'>
   <h3>Goal of differential expression</h3>
   <ul>
 <li>Find a set of genes for which \(\delta_i \ne 0\)</li>
-<li>And which obeys false discovery rate bounds</li>
+<li>We want to target a false discovery rate (FDR) cutoff</li>
 <li>For genes in our set G at FDR threshold z</li>
 </ul>
 
@@ -137,8 +158,9 @@ E \left( \sum\nolimits_{i \in G} 1_{ \{\delta_i = 0\} } \right) \le
 \left\vert G \right\vert z
 \]</p>
 
+  
 </section>
-<section class='' data-state='' id='slide-13'>
+<section class='' data-state='' id='slide-14'>
   <h3>Is this realistic?</h3>
   <ul>
 <li>Can we accomplish this if all \(\delta_i \ne 0\)
@@ -153,8 +175,9 @@ E \left( \sum\nolimits_{i \in G} 1_{ \{\delta_i = 0\} } \right) \le
 </ul></li>
 </ul>
 
+  
 </section>
-<section class='' data-state='' id='slide-14'>
+<section class='' data-state='' id='slide-15'>
   <h3>Is this realistic?</h3>
   <ul>
 <li>What about \(\sigma_i\) for both groups?
@@ -167,8 +190,9 @@ E \left( \sum\nolimits_{i \in G} 1_{ \{\delta_i = 0\} } \right) \le
 <li>Non-parametric: <a href="http://statweb.stanford.edu/%7Etibs/SAM/">SAM / SAMseq</a></li>
 </ul>
 
+  
 </section>
-<section class='' data-state='' id='slide-15'>
+<section class='' data-state='' id='slide-16'>
   <h3>Back to the model</h3>
   <p>\[
 \begin{aligned}
@@ -187,23 +211,27 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 <li>\(\sigma_i \sim \Gamma(10,10)\) </li>
 </ul>
 
+  
 </section>
-<section class='' data-state='' id='slide-16'>
+<section class='' data-state='' id='slide-17'>
   <h3>Distribution of \(\sigma_i\)</h3>
   <p><img src="assets/fig/sigmadist-1.png" alt="plot of chunk sigmadist"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-17'>
+<section class='' data-state='' id='slide-18'>
   <h3>Try simple row t-tests</h3>
   <p><img src="assets/fig/boxt-1.png" alt="plot of chunk boxt"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-18'>
+<section class='' data-state='' id='slide-19'>
   <h3>Just looking at ranks</h3>
   <p><img src="assets/fig/roc-1.png" alt="plot of chunk roc"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-19'>
+<section class='' data-state='' id='slide-20'>
   <h3>Characterize the false positives</h3>
   <p>\[
 \textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )
@@ -212,8 +240,9 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 
 <p><img src="assets/fig/mediant-1.png" alt="plot of chunk mediant"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-20'>
+<section class='' data-state='' id='slide-21'>
   <h3>Estimates of \(\sigma_i\)</h3>
   <p>\[
 \textrm{med}(t) \equiv \textrm{median}( \left| t_i \right| )
@@ -222,8 +251,9 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 
 <p><img src="assets/fig/fp-1.png" alt="plot of chunk fp"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-21'>
+<section class='' data-state='' id='slide-22'>
   <h3>New estimator for \(\sigma_i\)</h3>
   <p>\[
 \begin{aligned}
@@ -234,18 +264,21 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 
 <p><img src="assets/fig/tildesigma-1.png" alt="plot of chunk tildesigma"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-22'>
+<section class='' data-state='' id='slide-23'>
   <h3>New estimator performance by rank</h3>
   <p><img src="assets/fig/roc2-1.png" alt="plot of chunk roc2"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-23'>
+<section class='' data-state='' id='slide-24'>
   <h3>New estimators by |t|</h3>
   <p><img src="assets/fig/newestmediant-1.png" alt="plot of chunk newestmediant"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-24'>
+<section class='' data-state='' id='slide-25'>
   <h3>Summary</h3>
   <ul>
 <li>Top false positives were coming from genes with too low \(\hat{\sigma}_i\)</li>
@@ -254,15 +287,17 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 <li>Depending on &quot;close&quot;, new estimator dominates at all thresholds</li>
 </ul>
 
+  
 </section>
-<section class='' data-state='' id='slide-25'>
+<section class='' data-state='' id='slide-26'>
   <h3>How is this hierarchical?</h3>
   <p>Not your standard diagram, need to formalize</p>
 
 <p><img src="img/plate1.png" alt=""></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-26'>
+<section class='' data-state='' id='slide-27'>
   <h3>limma</h3>
   <ul>
 <li><a href="http://www.statsci.org/smyth/pubs/ebayes.pdf">Smyth, G. K. (2004)</a> 
@@ -281,8 +316,9 @@ experiment represented as linear model</li>
 
 <p><br></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-27'>
+<section class='' data-state='' id='slide-28'>
   <h3>Why inverse \(\chi^2\)?</h3>
   <ul>
 <li>Conjugacy provides closed form solution</li>
@@ -298,8 +334,9 @@ experiment represented as linear model</li>
 
 <p>And \(d_i\) as the standard residual degrees of freedom</p>
 
+  
 </section>
-<section class='' data-state='' id='slide-28'>
+<section class='' data-state='' id='slide-29'>
   <h3>Note that \(d_0\) controls B</h3>
   <p>\[
 \begin{aligned}
@@ -311,13 +348,15 @@ experiment represented as linear model</li>
 \end{aligned}
 \]</p>
 
+  
 </section>
-<section class='' data-state='' id='slide-29'>
+<section class='' data-state='' id='slide-30'>
   <h3>Proper hierarchical model</h3>
   <p><img src="img/plate2.png" alt=""></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-30'>
+<section class='' data-state='' id='slide-31'>
   <h3>Estimation of hyperparameters</h3>
   <ul>
 <li>Need to estimate \(d_0, \hat{\sigma}_0^2\), which control strength and
@@ -327,18 +366,21 @@ location of <em>shrinkage</em> or <em>moderation</em></li>
 variance of coefficients)</li>
 </ul>
 
+  
 </section>
-<section class='' data-state='' id='slide-31'>
+<section class='' data-state='' id='slide-32'>
   <h3>limma vs. naive estimators by rank</h3>
   <p><img src="assets/fig/roc3-1.png" alt="plot of chunk roc3"></p>
 
-</section>
-<section class='' data-state='' id='slide-32'>
-  <h3>Rank is not the full picture</h3>
-  <p><img src="assets/fig/roc4-1.png" alt="plot of chunk roc4"></p>
-
+  
 </section>
 <section class='' data-state='' id='slide-33'>
+  <h3>Operating characteristics (FP &amp; FN)</h3>
+  <p><img src="assets/fig/roc4-1.png" alt="plot of chunk roc4"></p>
+
+  
+</section>
+<section class='' data-state='' id='slide-34'>
   <h3>Summary</h3>
   <ul>
 <li>limma provides a hierarchical model for moderation of
@@ -347,13 +389,15 @@ variance estimates in the context of linear models</li>
 <li>Also addresses the gain in degrees of freedom from moderation</li>
 </ul>
 
+  
 </section>
-<section class='' data-state='' id='slide-34'>
+<section class='' data-state='' id='slide-35'>
   <h3>RNA-seq: counting molecules</h3>
   <p><img src="img/illumina.png" alt=""></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-35'>
+<section class='' data-state='' id='slide-36'>
   <h3>RNA-seq: counting molecules</h3>
   <p><br></p>
 
@@ -373,38 +417,36 @@ CTGTGTCCATGTCAGAGCAATGGCCCAAGTCTGGGTCTGGGGGGGAAGGTGTCATGGAGCCCCCTACGATTCCCAGTCGT
 
 <p>for ~30 million reads (often pairs of reads)</p>
 
+  
 </section>
-<section class='' data-state='' id='slide-36'>
+<section class='' data-state='' id='slide-37'>
   <h3>RNA-seq: counting molecules</h3>
   <p>Align to genome or transcriptome</p>
 
 <p><img src="img/blat.png" alt=""></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-37'>
+<section class='' data-state='' id='slide-38'>
   <h3>RNA-seq: counting molecules</h3>
   <ul>
 <li>Now for each gene and each sample we can obtain a <em>count</em>
 or <em>estimated count</em> of fragments</li>
 <li>Why estimated? Because some fragments cannot be uniquely associated
 with genes or isoforms</li>
-<li>Fast algorithms for probabilistically assigning:
+<li>Fast algorithms for probabilistically assignment:
 
 <ul>
-<li><a href="http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html">Sailfish</a> (2014)</li>
 <li><a href="http://www.nature.com/nbt/journal/v34/n5/full/nbt.3519.html">kallisto</a> (2016)</li>
-<li><a href="http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html">Salmon</a>** (2017)</li>
+<li><a href="http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html">Salmon</a> (2017)</li>
 </ul></li>
 <li>Assume we have integer counts \(K_{ij}\) of unique fragments or from 
 rounding estimated counts</li>
 </ul>
 
-<p><br></p>
-
-<p>** With technical bias modeling</p>
-
+  
 </section>
-<section class='' data-state='' id='slide-38'>
+<section class='' data-state='' id='slide-39'>
   <h3>Counts</h3>
   <ol>
 <li>Either model data with count distributions and inference with GLM
@@ -421,8 +463,9 @@ rounding estimated counts</li>
 </ul></li>
 </ol>
 
+  
 </section>
-<section class='' data-state='' id='slide-39'>
+<section class='' data-state='' id='slide-40'>
   <h3>Important for statistical analysis</h3>
   <ul>
 <li>Total number of fragments is technical artifact</li>
@@ -430,18 +473,21 @@ rounding estimated counts</li>
 <li>Each gene has different variability</li>
 </ul>
 
+  
 </section>
-<section class='' data-state='' id='slide-40'>
+<section class='' data-state='' id='slide-41'>
   <h3>Total number of fragments</h3>
   <p><img src="assets/fig/totalnumber-1.png" alt="plot of chunk totalnumber"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-41'>
+<section class='' data-state='' id='slide-42'>
   <h3>Sampling fragments</h3>
   <p><img src="assets/fig/sampfrags-1.png" alt="plot of chunk sampfrags"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-42'>
+<section class='' data-state='' id='slide-43'>
   <h3>Poisson across technical replicates</h3>
   <ul>
 <li>From <a href="https://www.ncbi.nlm.nih.gov/pubmed?term=20167110">Bullard 2010</a>
@@ -452,13 +498,15 @@ take 7 technical replicates</li>
 
 <p><img src="assets/fig/poisson-1.png" alt="plot of chunk poisson"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-43'>
+<section class='' data-state='' id='slide-44'>
   <h3>However, expression not equal across biological replicates</h3>
   <p><img src="img/people.jpg" alt=""></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-44'>
+<section class='' data-state='' id='slide-45'>
   <h3>Negative Binomial / Gamma Poisson</h3>
   <p>\[
 \begin{aligned}
@@ -469,8 +517,9 @@ K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
 
 <p><img src="assets/fig/negbin-1.png" alt="plot of chunk negbin"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-45'>
+<section class='' data-state='' id='slide-46'>
   <h3>NB model for RNA-seq</h3>
   <ul>
 <li>Similar to our microarray model for \(X_{ij}\)</li>
@@ -492,8 +541,9 @@ K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
 
 <p>\(\delta_i \ne 0\) implies DE (differential expression)</p>
 
+  
 </section>
-<section class='' data-state='' id='slide-46'>
+<section class='' data-state='' id='slide-47'>
   <h3>Moderation of dispersion</h3>
   <ul>
 <li>In <a href="https://www.ncbi.nlm.nih.gov/pubmed/25516281">DESeq2</a>, a prior on \(\log(\alpha_i)\)</li>
@@ -509,23 +559,27 @@ sampling variance of \(\log(\hat{\alpha}_i)\)</li>
 \log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)
 \]</p>
 
-</section>
-<section class='' data-state='' id='slide-47'>
-  <h3>Moderation of dispersion</h3>
-  <p><img src="img/plate3.png" alt=""></p>
-
+  
 </section>
 <section class='' data-state='' id='slide-48'>
   <h3>Moderation of dispersion</h3>
-  <p><img src="assets/fig/disp-1.png" alt="plot of chunk disp"></p>
+  <p><img src="img/plate3.png" alt=""></p>
 
+  
 </section>
 <section class='' data-state='' id='slide-49'>
+  <h3>Moderation of dispersion</h3>
+  <p><img src="assets/fig/disp-1.png" alt="plot of chunk disp"></p>
+
+  
+</section>
+<section class='' data-state='' id='slide-50'>
   <h3>Evaluate via simulation</h3>
   <p><img src="assets/fig/rnasim-1.png" alt="plot of chunk rnasim"></p>
 
+  
 </section>
-<section class='' data-state='' id='slide-50'>
+<section class='' data-state='' id='slide-51'>
   <h3>Summary</h3>
   <ul>
 <li>Model for counts similar to the hierarchical linear model,
@@ -533,8 +587,10 @@ but constructed for the dispersion parameter</li>
 <li>Final dispersion estimate plug-in value in DESeq2, edgeR</li>
 <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/23104842">edgeR quasi-likelihood</a> takes into account dispersion estimation uncertainty</li>
 <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/24485249">limma-voom</a> uses weights on log normalized counts</li>
+<li><a href="https://doi.org/10.1093/bioinformatics/bty895">apeglm</a> uses Cauchy prior (heavy tails) on effect sizes</li>
 </ul>
 
+  
 </section>
     </div>
   </div>
@@ -575,8 +631,10 @@ but constructed for the dispersion parameter</li>
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script> -->
+
 <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
 </script>
+
 <!-- LOAD HIGHLIGHTER JS FILES -->
 <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
