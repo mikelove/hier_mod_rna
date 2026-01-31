@@ -1,2 +1,3 @@
 .cache
 *.rda
+*.DS_store
