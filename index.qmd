@@ -1,35 +1,25 @@
 ---
-title       : Hierarchical Models for RNA-seq
-author      : Michael Love
-framework   : revealjs
-revealjs: # https://github.com/hakimel/reveal.js/
-  transition  : none
-  theme       : serif
-  center      : "true"
-highlighter : highlight.js
-hitheme     : tomorrow
-widgets     : [mathjax]
-mode        : selfcontained
-knit        : slidify::knit2slides
+title: "Hierarchical Models for RNA-seq"
+author: Michael Love
+format: revealjs
 ---
 
 ### Hierarchical Models for RNA-seq
 
-<br>
-
 Michael Love
-
-Dept of Biostatistics
 
 Dept of Genetics
 
+Dept of Biostatistics
+
 ---
 
-### DNA => RNA
+### Outline
 
-![](img/tx_elong.png)
-
-![](img/tx_em.jpg)
+* Why RNA
+* Motivation of hier. model for continuous gene expression
+* Extension to sequence count data
+* Questions
 
 ---
 
@@ -98,12 +88,8 @@ Signal was captured light (positive, "continuous")
 ### Motivating problem
 
 * Gene expression for *i*=1,...,N genes and *j*=1,...,M samples
-* log of gene expression values are in a tall matrix X
-* log here is convenient because gene expression is non-negative and has a
-  long tail
-* 2 equal sized groups of samples A and B
-
-<br>
+* log of "true" expression values (non-negative, long tail)
+* Suppose 2 equal sized groups of samples: "A" and "B"
 
 $$
 \begin{aligned}
@@ -113,17 +99,13 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 \end{aligned}
 $$
 
-<br>
-
 $\delta_i \ne 0$ implies DE (differential expression)
 
 ---
 
 ### Note $\sigma_i$
 
-This is *critical*: different genes *i* have different amount of variability.
-
-<br>
+Different genes *i* have different amount of variability.
 
 $$ 
 \begin{aligned}
@@ -139,9 +121,7 @@ $$
 
 * Find a set of genes for which $\delta_i \ne 0$
 * We want to target a false discovery rate (FDR) cutoff
-* For genes in our set G at FDR threshold z
-
-<br>
+* For genes in our set G at FDR threshold $z$
 
 $$
 E \left( \sum\nolimits_{i \in G} 1_{ \{\delta_i = 0\} } \right) \le
@@ -178,8 +158,6 @@ X_{ij} &\sim N(\mu_{ij}, \sigma_i) \\
 \mu_{ij} &= \mu_{i0} + \delta_i, \quad j \in B
 \end{aligned}
 $$
-
-<br>
 
 * N = 5000, M = 6
 * $\delta_i = 0$ for 90%
@@ -418,8 +396,6 @@ $$
 * Posterior mean for $1/\sigma_i^2$ given $\hat{\sigma}_i^2$ is
   $1/\tilde{\sigma}_i^2$ with
 
-<br>
-
 $$
 \tilde{\sigma}_i^2 = \frac{d_0 \hat{\sigma}_0^2 + d_i \hat{\sigma}_i^2}{d_0 + d_i} 
 $$
@@ -464,7 +440,7 @@ location of *shrinkage* or *moderation*
 library(limma)
 design <- model.matrix(~cond)
 fit <- lmFit(X, design)
-eb <- ebayes(fit)
+eb <- eBayes(fit)
 limma.t <- eb$t[,2]
 ```
 
@@ -558,7 +534,7 @@ Align to genome or transcriptome
   with genes or isoforms
 * Fast algorithms for probabilistically assignment:
   - [kallisto](http://www.nature.com/nbt/journal/v34/n5/full/nbt.3519.html) (2016)
-  - [Salmon](http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html) (2017)
+  - [salmon](http://www.nature.com/nmeth/journal/v14/n4/abs/nmeth.4197.html) (2017)
 * Assume we have integer counts $K_{ij}$ of unique fragments or from 
   rounding estimated counts
 
@@ -580,6 +556,8 @@ Align to genome or transcriptome
 * Total number of fragments is technical artifact
 * Heteroskedasticity of counts
 * Each gene has different variability
+* Technical covariates can not be excluded!
+* With $n > 20$, [estimate and include technical factors in the design](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs)
 
 ---
 
@@ -694,10 +672,7 @@ for (p in c(.8, .5, .2, .1, .05)) {
 
 ### NB model for RNA-seq
 
-* Similar to our microarray model for $X_{ij}$
-* Added an $s_j$ to deal with sequencing depth
-
-<br>
+* $s_j$ deals with sequencing depth
 
 $$
 \begin{aligned}
@@ -707,8 +682,6 @@ K_{ij} &\sim \textrm{NB}(\mu_{ij}, \alpha_i) \\
 \log_2(q_{ij}) &= \beta_{i0} + \delta_i, \quad j \in B
 \end{aligned}
 $$
-
-<br>
 
 $\delta_i \ne 0$ implies DE (differential expression)
 
@@ -721,8 +694,6 @@ $\delta_i \ne 0$ implies DE (differential expression)
 * A trend line of dispersion over mean $\alpha_{tr}(\mu)$
 * Width of the prior $\sigma^2$ estimated via assumption of normal
   sampling variance of $\log(\hat{\alpha}_i)$
-
-<br>
 
 $$
 \log(\alpha_i) \sim N(\log(\alpha_{tr}(\bar{\mu}_i)), \sigma^2)
@@ -799,3 +770,8 @@ legend("bottomright",c("DESeq2","NB GLM","t-test log(ncount+1)"),
 * [edgeR quasi-likelihood](https://www.ncbi.nlm.nih.gov/pubmed/23104842) takes into account dispersion estimation uncertainty
 * [limma-voom](https://www.ncbi.nlm.nih.gov/pubmed/24485249) uses weights on log normalized counts
 * [apeglm](https://doi.org/10.1093/bioinformatics/bty895) uses Cauchy prior (heavy tails) on effect sizes
+
+---
+
+### Questions?
+
